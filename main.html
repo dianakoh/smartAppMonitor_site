@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/mainpagestyle.css">
     <script src="//code.jquery.com/jquery.min.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <link link rel="shortcut icon" href="image/monitoring.png"/>
 </head>
 <body>
@@ -73,6 +74,73 @@
        }
     });
 
+    var appName = "";
+    var socket = io('http://203.252.195.182:8080', {
+        query:  'userId='+sessionStorage.getItem("userId")
+    });
+    socket.on('send data event', function(data) {
+        showRealtimeInfo(data)
+    });
+
+    function showRealtimeInfo(data) {
+        var text = "";
+        if(appName != data.appName) {
+            text += "<h5>" + data.appName + "</h5>";
+            appName = data.appName
+        }
+        var type = data.methodType;
+        var name = data.methodName;
+        var capability = data.capability;
+        var deviceName = data.deviceName;
+        if(deviceName.includes("[") && deviceName.includes("]")) deviceName = deviceName.substring(1, deviceName.length-1);
+        var datetime = data.createdAt;
+
+        if(type == "handlerMethod") {
+            text += "<span class='elementSpan'><ul>";
+            text += "<li>[" + type + "]</li>";
+            text += "<li>name: " + name + "</li>";
+            text += "<li>occur: " + datetime + "</li>";
+            text += "</ul></span>";
+            text += "<span class='arrowSpan'>-></span>";
+        }
+
+        if(type == "methodCall") {
+
+        }
+        if(type == "event") {
+            var img_path;
+            if(capability == "time")
+                img_path = "\"image/" + capability + ".png\"";
+            else
+                img_path = "\"image/" + capability + "_" + name + ".png\"";
+            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
+            text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
+            text += "<li>[" + type + "]</li>";
+            text += "<li><img src=" + img_path + ">" + "</li>";
+            text += "<li>name: " + name + "</li>";
+            text += "<li>cap: " + capability + "</li>";
+            text += "<li>device: " + deviceName + "</li>";
+            text += "<li>occur: " + datetime + "</li>";
+            text += "</ul></a></span>";
+            text += "<span class='arrowSpan'>-></span>";
+        }
+        if(type == "action") {
+            var img_path = "\"image/" + capability + "_" + name + ".png\"";
+            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
+            text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
+            text += "<li>[" + type + "]</li>";
+            text += "<li><img src=" + img_path + ">" + "</li>";
+            text += "<li>name: " + name + "</li>";
+            text += "<li>cap: " + capability + "</li>";
+            text += "<li>device: " + deviceName + "</li>";
+            text += "<li>occur: " + datetime + "</li>";
+            text += "</ul></a></span>";
+            text += "<span class='arrowSpan'>-></span>";
+        }
+
+        document.getElementById("realtime").innerHTML += text;
+
+    }
     function logout() {
         sessionStorage.removeItem("userId");
         window.location.href = "index.html";
