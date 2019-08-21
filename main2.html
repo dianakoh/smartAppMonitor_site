@@ -8,7 +8,8 @@
     <script src="//code.jquery.com/jquery.min.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-    <link link rel="shortcut icon" href="image/monitoring.png"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="image/monitoring_Logo.jpg"/>
+    <link rel="shortcut icon" sizes="192x192" href="image/monitoring_Logo.jpg"/>
     <link rel="stylesheet" href="css/mainpagestyle2.css">
 </head>
 <body>
@@ -347,13 +348,23 @@
         var url = "http://203.252.195.182:8080/flowsbyUser/" + appName + "/" + sessionStorage.getItem("userId") + "/";
         if(elements[0].includes("event")){
             url += "whyEvent/";
-            url += elements[3].split(':')[1].substring(1) + "/";
-            url += elements[1].split(':')[1].substring(1) + "/";
-            url += elements[4].split(' ')[1];
+            if(elements[1] === "") {
+                url += elements[4].split(':')[1].substring(1) + "/";
+                url += elements[2].split(':')[1].substring(1) + "/";
+                url += elements[5].split(' ')[1];
+            }
+            else {
+                url += elements[3].split(':')[1].substring(1) + "/";
+                url += elements[1].split(':')[1].substring(1) + "/";
+                url += elements[4].split(' ')[1];
+            }
             getJSON(url, function(err, data) {
                 if(err != null) console.error(err);
                 else {
-                    var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
+                    if(elements[1] === "")
+                        var text = "<h5>why was the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " at " + elements[5].split(' ')[1] + "</h5>";
+                    else
+                        var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
                     console.log(proveInfo.length);
                     for(var i = 0; i < proveInfo.length; i++) {
@@ -414,13 +425,23 @@
         }
         else if(elements[0].includes("action")) {
             url += "whyAction/";
-            url += elements[3].split(':')[1].substring(1) + "/";
-            url += elements[1].split(':')[1].substring(1) + "/";
-            url += elements[4].split(' ')[1];
+            if(elements[1] === "") {
+                url += elements[4].split(':')[1].substring(1) + "/";
+                url += elements[2].split(':')[1].substring(1) + "/";
+                url += elements[5].split(' ')[1];
+            }
+            else {
+                url += elements[3].split(':')[1].substring(1) + "/";
+                url += elements[1].split(':')[1].substring(1) + "/";
+                url += elements[4].split(' ')[1];
+            }
             getJSON(url, function(err, data) {
                 if(err != null) console.error(err);
                 else {
-                    var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
+                    if(elements[1] === "")
+                        var text = "<h5>why was the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " at " + elements[5].split(' ')[1] + "</h5>";
+                    else
+                        var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
                     console.log(proveInfo.length);
                     for(var i = 0; i < proveInfo.length; i++) {
@@ -489,13 +510,23 @@
         var url = "http://203.252.195.182:8080/flowsbyUser/" + appName + "/" + sessionStorage.getItem("userId") + "/";
         if(elements[0].includes("event")){
             url += "whatAction/";
-            url += elements[3].split(':')[1].substring(1) + "/";
-            url += elements[1].split(':')[1].substring(1) + "/";
-            url += elements[4].split(' ')[1];
+            if(elements[1] === "") {
+                url += elements[4].split(':')[1].substring(1) + "/";
+                url += elements[2].split(':')[1].substring(1) + "/";
+                url += elements[5].split(' ')[1];
+            }
+            else {
+                url += elements[3].split(':')[1].substring(1) + "/";
+                url += elements[1].split(':')[1].substring(1) + "/";
+                url += elements[4].split(' ')[1];
+            }
             getJSON(url, function(err, data) {
                 if(err != null) console.error(err);
                 else {
-                    var text = "<h5>what actions are derived from the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " event at " + elements[4].split(' ')[1] + "</h5>";
+                    if(elements[1] === "")
+                        var text = "<h5>what actions are derived from the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " event at " + elements[5].split(' ')[1] + "</h5>";
+                    else
+                        var text = "<h5>what actions are derived from the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " event at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
                     console.log(proveInfo.length);
                     for(var i = 0; i < proveInfo.length; i++) {
@@ -555,13 +586,23 @@
         }
         else if(elements[0].includes("action")) {
             url += "whatEvent/";
-            url += elements[3].split(':')[1].substring(1) + "/";
-            url += elements[1].split(':')[1].substring(1) + "/";
-            url += elements[4].split(' ')[1];
+            if(elements[1] === "") {
+                url += elements[4].split(':')[1].substring(1) + "/";
+                url += elements[2].split(':')[1].substring(1) + "/";
+                url += elements[5].split(' ')[1];
+            }
+            else {
+                url += elements[3].split(':')[1].substring(1) + "/";
+                url += elements[1].split(':')[1].substring(1) + "/";
+                url += elements[4].split(' ')[1];
+            }
             getJSON(url, function(err, data) {
                 if(err != null) console.error(err);
                 else {
-                    var text = "<h5>what events are caused by the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " action at " + elements[4].split(' ')[1] + "</h5>";
+                    if(elements[1] === "")
+                        var text = "<h5>what events are caused by the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " action at " + elements[5].split(' ')[1] + "</h5>";
+                    else
+                        var text = "<h5>what events are caused by the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " action at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
                     console.log(proveInfo.length);
                     for(var i = 0; i < proveInfo.length; i++) {
