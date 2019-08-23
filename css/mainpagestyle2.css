@@ -108,7 +108,7 @@ html {
 
 .elementSpan {
     display:inline-block;
-    width:30%
+    width:100%
 }
 
 .elementSpan > ul {
@@ -122,8 +122,7 @@ html {
     height:30px;
 }
 .arrowSpan {
-    display:inline-block;
-    width:3%;
+    display:none;
 }
 
 .footer {
@@ -162,6 +161,14 @@ html {
         grid-gap: 10px;
         margin: 0;
     }
+    .elementSpan {
+        display:inline-block;
+        width:30%
+    }
+    .arrowSpan {
+        display:inline-block;
+        width:3%;
+    }
 }
 @media only screen and (min-width: 768px) {
     /* For desktop: */
@@ -184,5 +191,13 @@ html {
         grid-template-columns: 40% 60%;
         grid-gap: 10px;
         margin: 0;
+    }
+    .elementSpan {
+        display:inline-block;
+        width:30%
+    }
+    .arrowSpan {
+        display:inline-block;
+        width:3%;
     }
 }
