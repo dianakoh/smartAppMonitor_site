@@ -168,7 +168,7 @@
 
     function showFlow(obj) {
         var flowInfo;
-        document.getElementById("trace").innerHTML = obj + " trace data"
+        document.getElementById("trace").innerHTML = obj + " trace data";
         getJSON('http://203.252.195.182:8080/flowsbyUser' + '/' + obj + '/' + sessionStorage.getItem('userId'), function(err, data) {
             if(err != null) console.error(err);
             else {
@@ -229,6 +229,9 @@
         if(lastItem > dataLength) lastItem = dataLength;
 
         var text = "";
+        text += "<div><input id='eventButton' name='eventButton' type='button' value='event' onclick=showEvent(\"" + data[0].appName + "\"," +  "\"event\");>";
+        text += "<input id='eventButton' name='eventButton' type='button' value='action' onclick=showEvent(\"" + data[0].appName + "\"," + "\"action\");>";
+        text += "</div>";
         for(var i = startItem; i < lastItem; i++) {
             var type = data[i].methodType;
             var name = data[i].methodName;
@@ -281,6 +284,17 @@
             }
         }
         document.getElementById("flowinfo").innerHTML = text;
+    }
+
+    function showEvent(appName, type) {
+        getJSON('http://203.252.195.182:8080/flowsbyUser' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type, function(err, data) {
+            if(err != null) console.error(err);
+            else {
+                paging(1, data.data);
+                showFlowData(1, data.data);
+
+            }
+        });
     }
 
     function showGraph(obj) {
