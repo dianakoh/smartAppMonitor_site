@@ -78,7 +78,9 @@
             var text = "<ul>";
             for(var i = 0; i < data.data.length; i++){
                 var app = data.data[i].appName;
-                text += "<li><h4 onclick=showInfo(this.innerHTML);>" + app + "</h4></li>";
+                var detail = "\"" + data.data[i].detail + "\"";
+                //console.log(data.data[i].detail);
+                text += "<li><h4 onclick=showInfo(this.innerHTML," + detail+ ");>" + app + "</h4></li>";
             }
             text += "</ul>";
             document.getElementById("applist").innerHTML += text;
@@ -110,7 +112,7 @@
             text += "<span class='elementSpan'><ul>";
             text += "<li>[" + type + "]</li>";
             text += "<li>name: " + name + "</li>";
-            text += "<li>occur: " + datetime + "</li>";
+            //text += "<li>occur: " + datetime + "</li>";
             text += "</ul></span>";
             text += "<span class='arrowSpan'>-></span>";
         }
@@ -131,7 +133,7 @@
             text += "<li>name: " + name + "</li>";
             text += "<li>cap: " + capability + "</li>";
             text += "<li>device: " + deviceName + "</li>";
-            text += "<li>occur: " + datetime + "</li>";
+            //text += "<li>occur: " + datetime + "</li>";
             text += "</ul></a></span>";
             text += "<span class='arrowSpan'>-></span>";
         }
@@ -144,7 +146,7 @@
             text += "<li>name: " + name + "</li>";
             text += "<li>cap: " + capability + "</li>";
             text += "<li>device: " + deviceName + "</li>";
-            text += "<li>occur: " + datetime + "</li>";
+            //text += "<li>occur: " + datetime + "</li>";
             text += "</ul></a></span>";
             text += "<span class='arrowSpan'>-></span>";
         }
@@ -157,28 +159,28 @@
         window.location.href = "index.html";
     }
 
-    function showInfo(obj) {
-        console.log(obj);
+    function showInfo(obj, detail) {
+        //console.log(obj);
         /*for(var i = 0; i < smartAppInfo.length; i++) {
                 if(smartAppInfo[i].appName == )
         }*/
-        showFlow(obj);
+        showFlow(obj, detail);
         showGraph(obj);
     }
 
-    function showFlow(obj) {
+    function showFlow(obj, detail) {
         var flowInfo;
         document.getElementById("trace").innerHTML = obj + " trace data";
         getJSON('http://203.252.195.182:8080/flowsbyUser' + '/' + obj + '/' + sessionStorage.getItem('userId'), function(err, data) {
             if(err != null) console.error(err);
             else {
                 flowInfo = data.data;
-                paging(1, flowInfo);
-                showFlowData(1, flowInfo);
+                paging(1, flowInfo, detail);
+                showFlowData(1, flowInfo, detail);
             }
         });
     }
-    function paging(currentPage, data) {
+    function paging(currentPage, data, detail) {
         var dataLength = data.length;
         var perPage = 15;
         var totalPage = Math.ceil(dataLength/perPage);
@@ -215,13 +217,14 @@
             if($id == "prev")    selectedPage = prev;
             if($id == "first") selectedPage = "1";
             if($id == "last") selectedPage = totalPage;
-            paging(selectedPage, data);
-            showFlowData(selectedPage, data);
+            paging(selectedPage, data, detail);
+            showFlowData(selectedPage, data, detail);
         });
 
     }
 
-    function showFlowData(currentPage, data) {
+    function showFlowData(currentPage, data, detail) {
+        console.log(detail);
         var perPage = 15;
         var dataLength = data.length;
         var startItem = (currentPage-1) * perPage;
@@ -229,8 +232,10 @@
         if(lastItem > dataLength) lastItem = dataLength;
 
         var text = "";
-        text += "<div><input id='eventButton' name='eventButton' type='button' value='event' onclick=showEvent(\"" + data[0].appName + "\"," +  "\"event\");>";
-        text += "<input id='eventButton' name='eventButton' type='button' value='action' onclick=showEvent(\"" + data[0].appName + "\"," + "\"action\");>";
+        var appName = "\"" + encodeURI(data[0].appName) + "\"";
+        detail = "\"" + detail + "\"";
+        text += "<div><input id='eventButton' name='eventButton' type='button' value='event' onclick=showEvent(" + appName + "," +  "\"event\"," + detail + ");>";
+        text += "<input id='eventButton' name='eventButton' type='button' value='action' onclick=showEvent(" + appName + "," +  "\"action\"," + detail + ");>";
         text += "</div>";
         for(var i = startItem; i < lastItem; i++) {
             var type = data[i].methodType;
@@ -286,12 +291,13 @@
         document.getElementById("flowinfo").innerHTML = text;
     }
 
-    function showEvent(appName, type) {
+    function showEvent(appName, type, detail) {
+        appName = decodeURI(appName);
         getJSON('http://203.252.195.182:8080/flowsbyUser' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type, function(err, data) {
             if(err != null) console.error(err);
             else {
-                paging(1, data.data);
-                showFlowData(1, data.data);
+                paging(1, data.data, detail);
+                showFlowData(1, data.data, detail);
 
             }
         });
@@ -309,8 +315,8 @@
                     month.push(flowData[i].date);
                     graphData.push(flowData[i].countAll);
                 }
-                console.log(month);
-                console.log(graphData);
+                //console.log(month);
+                //console.log(graphData);
                 var ctx = document.getElementById('myChart');
                 myChart = new Chart(ctx, {
                     type: 'bar',
@@ -380,7 +386,7 @@
                     else
                         var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
-                    console.log(proveInfo.length);
+                    //console.log(proveInfo.length);
                     for(var i = 0; i < proveInfo.length; i++) {
                         var type = proveInfo[i].methodType;
                         var name = proveInfo[i].methodName;
@@ -457,7 +463,7 @@
                     else
                         var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
-                    console.log(proveInfo.length);
+                    //console.log(proveInfo.length);
                     for(var i = 0; i < proveInfo.length; i++) {
                         var type = proveInfo[i].methodType;
                         var name = proveInfo[i].methodName;
@@ -542,7 +548,7 @@
                     else
                         var text = "<h5>what actions are derived from the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " event at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
-                    console.log(proveInfo.length);
+                    //console.log(proveInfo.length);
                     for(var i = 0; i < proveInfo.length; i++) {
                         var type = proveInfo[i].methodType;
                         var name = proveInfo[i].methodName;
@@ -618,7 +624,7 @@
                     else
                         var text = "<h5>what events are caused by the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " action at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
-                    console.log(proveInfo.length);
+                    //console.log(proveInfo.length);
                     for(var i = 0; i < proveInfo.length; i++) {
                         var type = proveInfo[i].methodType;
                         var name = proveInfo[i].methodName;
