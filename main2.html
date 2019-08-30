@@ -11,6 +11,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="image/monitoring_Logo.jpg"/>
     <link rel="shortcut icon" sizes="192x192" href="image/monitoring_Logo.jpg"/>
     <link rel="stylesheet" href="css/mainpagestyle2.css">
+    <!--<link rel="stylesheet" href="css/dropdown.css">-->
 </head>
 <body>
 
@@ -78,7 +79,10 @@
             var text = "<ul>";
             for(var i = 0; i < data.data.length; i++){
                 var app = data.data[i].appName;
-                var detail = "\"" + data.data[i].detail + "\"";
+                var detail = data.data[i].detail;
+                if(detail != null) {
+                    detail = "\"" + detail.substring(1, detail.length - 1) + "\"";
+                }
                 //console.log(data.data[i].detail);
                 text += "<li><h4 onclick=showInfo(this.innerHTML," + detail+ ");>" + app + "</h4></li>";
             }
@@ -224,7 +228,7 @@
     }
 
     function showFlowData(currentPage, data, detail) {
-        console.log(detail);
+        var detail_ori = detail;
         var perPage = 15;
         var dataLength = data.length;
         var startItem = (currentPage-1) * perPage;
@@ -233,10 +237,55 @@
 
         var text = "";
         var appName = "\"" + encodeURI(data[0].appName) + "\"";
-        detail = "\"" + detail + "\"";
-        text += "<div><input id='eventButton' name='eventButton' type='button' value='event' onclick=showEvent(" + appName + "," +  "\"event\"," + detail + ");>";
-        text += "<input id='eventButton' name='eventButton' type='button' value='action' onclick=showEvent(" + appName + "," +  "\"action\"," + detail + ");>";
-        text += "</div>";
+        if(detail != null) {
+            detail = "\"" + detail + "\"";
+            var detail_sub = detail_ori.split(',');
+            var eventSub = [];
+            var actionSub = [];
+            var methodSub = [];
+            for (var i = 0; i < detail_sub.length; i++) {
+                if (detail_sub[i].includes("event")) {
+                    eventSub.push(detail_sub[i].split(':')[1]);
+                }
+                if (detail_sub[i].includes("action")) {
+                    actionSub.push(detail_sub[i].split(':')[1]);
+                }
+                if (detail_sub[i].includes("method")) {
+                    methodSub.push(detail_sub[i].split(':')[1]);
+                }
+            }
+
+            text += "<div class=\"topnav\" id=\"myTopnav\">";
+            text += "<div class='dropdown'><button class='dropbtn' onclick=showEvent(" + appName + "," + "\"event\"," + detail + ");>Event<i class='fa fa-caret-down'></i></button>";
+            text += "<div class='dropdown-content'>";
+            for (var i = 0; i < eventSub.length; i++) {
+                text += "<a href='#'>" + eventSub[i] + "</a>";
+            }
+            text += "</div></div>";
+            text += "<div class='dropdown'><button class='dropbtn' onclick=showEvent(" + appName + "," + "\"action\"," + detail + ");>Action<i class='fa fa-caret-down'></i></button>";
+            text += "<div class='dropdown-content'>";
+            for (var i = 0; i < actionSub.length; i++) {
+                text += "<a href='#'>" + actionSub[i] + "</a>";
+            }
+            text += "</div></div>";
+            text += "</div>";
+        }
+        else {
+            text += "<div class=\"topnav\" id=\"myTopnav\">";
+            text += "<div class='dropdown'><button class='dropbtn' onclick=showEvent(" + appName + "," + "\"event\"," + detail + ");>Event<i class='fa fa-caret-down'></i></button>";
+            text += "<div class='dropdown-content'>";
+            text += "</div></div>";
+            text += "<div class='dropdown'><button class='dropbtn' onclick=showEvent(" + appName + "," + "\"action\"," + detail + ");>Action<i class='fa fa-caret-down'></i></button>";
+            text += "<div class='dropdown-content'>";
+            text += "</div></div>";
+            text += "</div>";
+        }
+        /*console.log(eventSub);
+        console.log(actionSub);
+        console.log(methodSub);*/
+        //text += "<div><input id='eventButton' name='eventButton' type='button' value='event' onclick=showEvent(" + appName + "," +  "\"event\"," + detail + ");>";
+        //text += "<input id='eventButton' name='eventButton' type='button' value='action' onclick=showEvent(" + appName + "," +  "\"action\"," + detail + ");>";
+        //text += "</div>";
         for(var i = startItem; i < lastItem; i++) {
             var type = data[i].methodType;
             var name = data[i].methodName;
