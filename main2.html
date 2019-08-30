@@ -259,13 +259,13 @@
             text += "<div class='dropdown'><button class='dropbtn' onclick=showEvent(" + appName + "," + "\"event\"," + detail + ");>Event<i class='fa fa-caret-down'></i></button>";
             text += "<div class='dropdown-content'>";
             for (var i = 0; i < eventSub.length; i++) {
-                text += "<a href='#'>" + eventSub[i] + "</a>";
+                text += "<a href=\"javascript:void(0);\" onclick=showEvent2(" + appName + "," + "\"event\",\"" + eventSub[i] + "\"," + detail + ");>" + eventSub[i] + "</a>";
             }
             text += "</div></div>";
             text += "<div class='dropdown'><button class='dropbtn' onclick=showEvent(" + appName + "," + "\"action\"," + detail + ");>Action<i class='fa fa-caret-down'></i></button>";
             text += "<div class='dropdown-content'>";
             for (var i = 0; i < actionSub.length; i++) {
-                text += "<a href='#'>" + actionSub[i] + "</a>";
+                text += "<a href=\"javascript:void(0);\" onclick=showEvent2(" + appName + "," + "\"action\",\"" + actionSub[i] + "\"," + detail + ");>" + actionSub[i] + "</a>";
             }
             text += "</div></div>";
             text += "</div>";
@@ -348,6 +348,32 @@
                 paging(1, data.data, detail);
                 showFlowData(1, data.data, detail);
 
+            }
+        });
+    }
+
+    function showEvent2(appName, type, methodName, detail) {
+        appName = decodeURI(appName);
+        var methodName_ori = methodName;
+        var methodName_sub;
+        if(type == "event") {
+            methodName_sub = methodName_ori.split('-')[0];
+            if(methodName_sub.includes("."))
+                methodName_sub = methodName_sub.split('.')[1];
+        }
+        if(type == "action") {
+            if(methodName_ori.includes("."))
+                methodName_sub = methodName_ori.split('.')[1];
+            else {
+                methodName_sub = methodName_ori;
+            }
+        }
+        //console.log('http://203.252.195.182:8080/flowsbyUserEorAorM' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type + '/' + methodName_sub);
+        getJSON('http://203.252.195.182:8080/flowsbyUserEorAorM' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type + '/' + methodName_sub, function(err, data) {
+            if(err != null) console.error(err);
+            else {
+                paging(1, data.data, detail);
+                showFlowData(1, data.data, detail);
             }
         });
     }
