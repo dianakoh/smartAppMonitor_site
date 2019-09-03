@@ -268,8 +268,16 @@
                 text += "<a href=\"javascript:void(0);\" onclick=showEvent2(" + appName + "," + "\"action\",\"" + actionSub[i] + "\"," + detail + ");>" + actionSub[i] + "</a>";
             }
             text += "</div></div>";
+
             text += "<div class='dropdown'><button class='dropbtn'>Pattern<i class='fa fa-caret-down'></i></button>";
             text += "<div class='dropdown-content'>";
+            text += "<p>Search a Pattern</p>";
+            text += "<select name='eventOrAction'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<input type='text'>";
+            text += "<p>---></p>";
+            text += "<select name='eventOrAction2'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<input type='text'>";
+            text += "<button style='display: block'>search</button>";
             text += "</div></div>";
             text += "</div>";
         }
@@ -281,7 +289,20 @@
             text += "<div class='dropdown'><button class='dropbtn' onclick=showEvent(" + appName + "," + "\"action\"," + detail + ");>Action<i class='fa fa-caret-down'></i></button>";
             text += "<div class='dropdown-content'>";
             text += "</div></div>";
+
+            text += "<div class='dropdown'><button class='dropbtn'>Pattern<i class='fa fa-caret-down'></i></button>";
+            text += "<div class='dropdown-content'>";
+            text += "<p>Search a Pattern</p>";
+            text += "<select name='eventOrAction'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<input type='text'>";
+            text += "<p>---></p>";
+            text += "<select name='eventOrAction2'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<input type='text'>";
+            text += "<button style='display: block'>search</button>";
+            text += "</div></div>";
             text += "</div>";
+
+
         }
         /*console.log(eventSub);
         console.log(actionSub);
