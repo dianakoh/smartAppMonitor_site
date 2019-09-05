@@ -274,7 +274,7 @@
 
             text += "<div class='dropdown'><button class='dropbtn'>Pattern<i class='fa fa-caret-down'></i></button>";
             text += "<div class='dropdown-content'>";
-            text += "<p>Search a Pattern</p>";
+            text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
             text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
             text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
@@ -301,7 +301,7 @@
 
             text += "<div class='dropdown'><button class='dropbtn'>Pattern<i class='fa fa-caret-down'></i></button>";
             text += "<div class='dropdown-content'>";
-            text += "<p>Search a Pattern</p>";
+            text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
             text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
             text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
@@ -391,8 +391,9 @@
         document.getElementById('pattern2').innerHTML += text;
     }
     function patternSearch() {
-        var url = 'http://203.252.195.182:8080/flowsbyUser' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId') + '/findPattern';
+        var url = 'http://203.252.195.182:8080/flowsbyUserFindPattern' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId');
         var text = "";
+        var patternText = "";
         for(var i = 0; i <= patternNum1; i++) {
             var fp = document.getElementById("fPattern" + i.toString()).value;
             var fn = document.getElementById("fName" + i.toString()).value;
@@ -404,6 +405,7 @@
                 text += "|" + fp + "=" + fn;
         }
         url += text;
+        patternText += text;
         text = "";
         for(var i = 0; i <= patternNum2; i++) {
             var pp = document.getElementById("pPattern" + i.toString()).value;
@@ -413,10 +415,24 @@
                 text += pp + "=" + pn;
             }
             else
-                text += "&" + pp + "=" + pn;
+                text += "|" + pp + "=" + pn;
         }
         url += text;
-        alert(url);
+        patternText += "-->" + text;
+
+        getJSON(url, function (err, data) {
+           if(err != null) {
+               alert("There is not the pattern " + patternText);
+           }
+           else {
+               if(data.success == true) {
+                    alert("There is the pattern " + patternText);
+               }
+               if(data.success == false) {
+                    alert("There is not the pattern " + patternText);
+               }
+           }
+        });
     }
 
 
