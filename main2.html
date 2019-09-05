@@ -71,6 +71,8 @@
 <script>
     var smartAppInfo;
     var myChart;
+    var patternNum1 = 0;
+    var patternNum2 = 0;
     document.getElementById("userId").innerHTML += " " + sessionStorage.getItem("userId");
     getJSON('http://203.252.195.182:8080/smartapps' + '/' + sessionStorage.getItem("userId"),  function(err, data) {
         if(err != null) console.error(err);
@@ -168,6 +170,7 @@
         /*for(var i = 0; i < smartAppInfo.length; i++) {
                 if(smartAppInfo[i].appName == )
         }*/
+        sessionStorage.setItem('appName', obj);
         showFlow(obj, detail);
         showGraph(obj);
     }
@@ -272,12 +275,18 @@
             text += "<div class='dropdown'><button class='dropbtn'>Pattern<i class='fa fa-caret-down'></i></button>";
             text += "<div class='dropdown-content'>";
             text += "<p>Search a Pattern</p>";
-            text += "<select name='eventOrAction'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-            text += "<input type='text'>";
+            text += "<div id='pattern1'>";
+            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
+            text += "</div>";
+            text += "<button onclick='addPattern1();'>+</button>";
             text += "<p>---></p>";
-            text += "<select name='eventOrAction2'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-            text += "<input type='text'>";
-            text += "<button style='display: block'>search</button>";
+            text += "<div id='pattern2'>";
+            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
+            text += "</div>";
+            text += "<button onclick='addPattern2();'>+</button>";
+            text += "<button style='display: block' onclick='patternSearch();'>search</button>";
             text += "</div></div>";
             text += "</div>";
         }
@@ -293,15 +302,20 @@
             text += "<div class='dropdown'><button class='dropbtn'>Pattern<i class='fa fa-caret-down'></i></button>";
             text += "<div class='dropdown-content'>";
             text += "<p>Search a Pattern</p>";
-            text += "<select name='eventOrAction'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-            text += "<input type='text'>";
+            text += "<div id='pattern1'>";
+            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
+            text += "</div>";
+            text += "<button onclick='addPattern1();'>+</button>";
             text += "<p>---></p>";
-            text += "<select name='eventOrAction2'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-            text += "<input type='text'>";
-            text += "<button style='display: block'>search</button>";
+            text += "<div id='pattern2'>";
+            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
+            text += "</div>";
+            text += "<button onclick='addPattern2();'>+</button>";
+            text += "<button style='display: block' onclick='patternSearch();'>search</button>";
             text += "</div></div>";
             text += "</div>";
-
 
         }
         /*console.log(eventSub);
@@ -363,6 +377,33 @@
         }
         document.getElementById("flowinfo").innerHTML = text;
     }
+
+    function addPattern1() {
+        patternNum1++;
+        var text = "<p style='display: inline-block'>&</p><select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+        text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
+        document.getElementById('pattern1').innerHTML += text;
+    }
+    function addPattern2() {
+        patternNum2++;
+        var text = "<p style='display: inline-block'>&</p><select id='pPattern" + patternNum2++ + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+        text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
+        document.getElementById('pattern2').innerHTML += text;
+    }
+    function patternSearch() {
+        var url = 'http://203.252.195.182:8080/flowsbyUser' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId');
+        for(var i = 0; i <= patternNum1; i++) {
+            var fp = document.getElementById("fPattern" + i.toString()).value;
+            var fn = document.getElementById("fName" + i.toString()).value;
+            url += '/' + fp + '/' + fn;
+        }
+        for(var i = 0; i <= patternNum2; i++) {
+            var pp = document.getElementById("pPattern" + i.toString()).value;
+            var pn = document.getElementById("pName" + i.toString()).value;
+            url += '/' + pp + '/' + pn;
+        }
+    }
+
 
     function showEvent(appName, type, detail) {
         appName = decodeURI(appName);
