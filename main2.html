@@ -386,22 +386,26 @@
     }
     function addPattern2() {
         patternNum2++;
-        var text = "<p style='display: inline-block'>&</p><select id='pPattern" + patternNum2++ + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+        var text = "<p style='display: inline-block'>&</p><select id='pPattern" + patternNum2 + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
         text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
         document.getElementById('pattern2').innerHTML += text;
     }
     function patternSearch() {
-        var url = 'http://203.252.195.182:8080/flowsbyUser' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId');
+        var url = 'http://203.252.195.182:8080/flowsbyUser' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId') + '/pattern1';
         for(var i = 0; i <= patternNum1; i++) {
             var fp = document.getElementById("fPattern" + i.toString()).value;
             var fn = document.getElementById("fName" + i.toString()).value;
             url += '/' + fp + '/' + fn;
         }
         for(var i = 0; i <= patternNum2; i++) {
+            if(i == 0) {
+                url += '/pattern2';
+            }
             var pp = document.getElementById("pPattern" + i.toString()).value;
             var pn = document.getElementById("pName" + i.toString()).value;
             url += '/' + pp + '/' + pn;
         }
+        alert(url);
     }
 
 
