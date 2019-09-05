@@ -426,7 +426,11 @@
            }
            else {
                if(data.success == true) {
-                    alert("There is the pattern " + patternText);
+                   //alert("There is the pattern " + patternText);
+                   console.log(data);
+                   var url = "patternPopup.html?data=" + JSON.stringify(data.data);
+                   window.open(url, "Finded-Pattern", "width=400, height=300");
+
                }
                if(data.success == false) {
                     alert("There is not the pattern " + patternText);

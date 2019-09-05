@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>finded Pattern</title>
+    <link rel="stylesheet" href="css/mainpagestyle2.css">
+</head>
+<body>
+<div id="patternDiv"><h5>The Finded Pattern</h5></div>
+</body>
+<script>
+    var link = document.location.href;
+    var para1 = link.split("?");
+    var para2 = para1[1].substring(5, para1[1].length);
+    var para2 = decodeURI(para2);
+    var data = JSON.parse(para2);
+
+    var text = "";
+    for(var i = 0; i < data.length; i++) {
+        var type = data[i].methodType;
+        var name = data[i].methodName;
+        var capability = data[i].capability;
+        var deviceName = data[i].deviceName;
+        if(deviceName.includes("[") && deviceName.includes("]")) deviceName = deviceName.substring(1, deviceName.length-1);
+        if(type == "event") {
+            var img_path;
+            if(capability == "time")
+                img_path = "\"image/" + capability + ".png\"";
+            else
+                img_path = "\"image/" + capability + "_" + name + ".png\"";
+            text += "<span class='elementSpan'><a href='#'><ul>";
+            text += "<li>[" + type + "]</li>";
+            text += "<li><img src=" + img_path + ">" + "</li>";
+            text += "<li>name: " + name + "</li>";
+            text += "<li>cap: " + capability + "</li>";
+            text += "<li>device: " + deviceName + "</li>";
+            text += "</ul></a></span>";
+            text += "<span style='display: inline-block;' class='arrowSpan'>-></span>";
+        }
+        if(type == "action") {
+            var img_path = "\"image/" + capability + "_" + name + ".png\"";
+            text += "<span class='elementSpan'><a href='#'><ul>";
+            text += "<li>[" + type + "]</li>";
+            text += "<li><img src=" + img_path + ">" + "</li>";
+            text += "<li>name: " + name + "</li>";
+            text += "<li>cap: " + capability + "</li>";
+            text += "<li>device: " + deviceName + "</li>";
+            text += "</ul></a></span>";
+            text += "<span style='display: inline-block;' class='arrowSpan'>-></span>";
+        }
+    }
+    document.getElementById("patternDiv").innerHTML += text;
+
+</script>
+</html>
