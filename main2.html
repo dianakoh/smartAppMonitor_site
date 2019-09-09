@@ -175,13 +175,31 @@
         showGraph(obj);
     }
 
+    var eventArr = [];
+    var actionArr = [];
     function showFlow(obj, detail) {
         var flowInfo;
+        eventArr = [];
+        actionArr = [];
         document.getElementById("trace").innerHTML = obj + " trace data";
         getJSON('http://203.252.195.182:8080/flowsbyUser' + '/' + obj + '/' + sessionStorage.getItem('userId'), function(err, data) {
             if(err != null) console.error(err);
             else {
                 flowInfo = data.data;
+                for(var i = 0; i < flowInfo.length; i++) {
+                    if(flowInfo[i].methodType == "event") eventArr.push(flowInfo[i].methodName);
+                    if(flowInfo[i].methodType == "action") actionArr.push(flowInfo[i].methodName);
+                }
+                let filter1 = eventArr.filter((item, idx, array) => {
+                    return array.indexOf(item) === idx;
+                });
+                let filter2 = actionArr.filter((item, idx, array) => {
+                    return array.indexOf(item) === idx;
+                });
+                eventArr = filter1;
+                actionArr = filter2;
+                //console.log(eventArr);
+                //console.log(actionArr);
                 paging(1, flowInfo, detail);
                 showFlowData(1, flowInfo, detail);
             }
@@ -318,12 +336,7 @@
             text += "</div>";
 
         }
-        /*console.log(eventSub);
-        console.log(actionSub);
-        console.log(methodSub);*/
-        //text += "<div><input id='eventButton' name='eventButton' type='button' value='event' onclick=showEvent(" + appName + "," +  "\"event\"," + detail + ");>";
-        //text += "<input id='eventButton' name='eventButton' type='button' value='action' onclick=showEvent(" + appName + "," +  "\"action\"," + detail + ");>";
-        //text += "</div>";
+
         for(var i = startItem; i < lastItem; i++) {
             var type = data[i].methodType;
             var name = data[i].methodName;
@@ -376,6 +389,10 @@
             }
         }
         document.getElementById("flowinfo").innerHTML = text;
+    }
+
+    function addSelectOptions() {
+
     }
 
     function addPattern1() {
