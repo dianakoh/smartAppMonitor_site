@@ -294,14 +294,14 @@
             text += "<div class='dropdown-content'>";
             text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
-            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-            text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
+            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addSelectOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
             text += "</div>";
             text += "<button onclick='addPattern1();'>+</button>";
             text += "<p>---></p>";
             text += "<div id='pattern2'>";
-            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-            text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
+            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addSelectOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            //text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
             text += "</div>";
             text += "<button onclick='addPattern2();'>+</button>";
             text += "<button style='display: block' onclick='patternSearch();'>search</button>";
@@ -321,14 +321,14 @@
             text += "<div class='dropdown-content'>";
             text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
-            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-            text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
+            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addSelectOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
             text += "</div>";
             text += "<button onclick='addPattern1();'>+</button>";
             text += "<p>---></p>";
             text += "<div id='pattern2'>";
-            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-            text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
+            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addSelectOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            //text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
             text += "</div>";
             text += "<button onclick='addPattern2();'>+</button>";
             text += "<button style='display: block' onclick='patternSearch();'>search</button>";
@@ -391,8 +391,54 @@
         document.getElementById("flowinfo").innerHTML = text;
     }
 
-    function addSelectOptions() {
+    function addSelectOptions(type) {
+        var text = "";
+        var selectedType = document.getElementById(type);
+        var selectedValue = selectedType.options[selectedType.selectedIndex].value;
+        //selectedType.select(selectedType.selectedIndex);
+        //text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event' onclick='addSelectOptions(event);'>event</option><option value='action' onclick='addSelectOptions(action);'>action</option></select>";
+        //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
+        if(selectedValue == "event") {
+            text += "<select id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'><option value='' selected>--Select Options--</option>";
+            for(var i = 0; i < eventArr.length; i++) {
+                text += "<option value='" + eventArr[i] + "'>" + eventArr[i] + "</option>";
+            }
+            text += "</select>";
+        }
+        else if(selectedValue == "action") {
+            text += "<select id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'><option value='' selected>--Select Options--</option>";
+            for(var i = 0; i < actionArr.length; i++) {
+                text += "<option value='" + actionArr[i] + "'>" + actionArr[i] + "</option>";
+            }
+            text += "</select>";
+        }
+        console.log(text);
+        document.getElementById("pattern1").innerHTML += text;
+    }
 
+    function addSelectOptions2(type) {
+        var text = "";
+        var selectedType = document.getElementById(type);
+        var selectedValue = selectedType.options[selectedType.selectedIndex].value;
+        //selectedType.select(selectedType.selectedIndex);
+        //text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event' onclick='addSelectOptions(event);'>event</option><option value='action' onclick='addSelectOptions(action);'>action</option></select>";
+        //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
+        if(selectedValue == "event") {
+            text += "<select id='pName" + patternNum1 + "'" + " name='pName" + patternNum2 + "'><option value='' selected>--Select Options--</option>";
+            for(var i = 0; i < eventArr.length; i++) {
+                text += "<option value='" + eventArr[i] + "'>" + eventArr[i] + "</option>";
+            }
+            text += "</select>";
+        }
+        else if(selectedValue == "action") {
+            text += "<select id='pName" + patternNum1 + "'" + " name='pName" + patternNum2 + "'><option value='' selected>--Select Options--</option>";
+            for(var i = 0; i < actionArr.length; i++) {
+                text += "<option value='" + actionArr[i] + "'>" + actionArr[i] + "</option>";
+            }
+            text += "</select>";
+        }
+        console.log(text);
+        document.getElementById("pattern2").innerHTML += text;
     }
 
     function addPattern1() {
