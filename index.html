@@ -42,7 +42,7 @@
     function login() {
         var id = document.getElementById("email").value;
         var pw = document.getElementById("pw").value;
-        getJSON('http://203.252.195.182:8080/login/' + id + '/' + pw,  function(err, data) {
+        getJSON('http://ip address:port number/login/' + id + '/' + pw,  function(err, data) {
             if(data !== undefined) {
                 sessionStorage.setItem('userId', document.getElementById("email").value);
                 location.href="main2.html";
