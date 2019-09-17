@@ -22,7 +22,7 @@
 <div class="row">
     <div class="col-3 col-s-3 menu">
         <ul>
-            <li><a href="http://203.252.195.182:3030/code">Code Instrument</a></li>
+            <li><a href="http://ip address:port number/code">Code Instrument</a></li>
             <li><a href="https://graph.api.smartthings.com">SmartThings IDE</a></li>
         </ul>
     </div>
@@ -74,7 +74,7 @@
     var patternNum1 = 0;
     var patternNum2 = 0;
     document.getElementById("userId").innerHTML += " " + sessionStorage.getItem("userId");
-    getJSON('http://203.252.195.182:8080/smartapps' + '/' + sessionStorage.getItem("userId"),  function(err, data) {
+    getJSON('http://ip address:port number/smartapps' + '/' + sessionStorage.getItem("userId"),  function(err, data) {
         if(err != null) console.error(err);
         else {
             smartAppInfo = data;
@@ -94,7 +94,7 @@
     });
 
     var appName = "";
-    var socket = io('http://203.252.195.182:8080', {
+    var socket = io('http://ip address:port number', {
         query:  'userId='+sessionStorage.getItem("userId")
     });
     socket.on('send data event', function(data) {
@@ -182,7 +182,7 @@
         eventArr = [];
         actionArr = [];
         document.getElementById("trace").innerHTML = obj + " trace data";
-        getJSON('http://203.252.195.182:8080/flowsbyUser' + '/' + obj + '/' + sessionStorage.getItem('userId'), function(err, data) {
+        getJSON('http://ip address:port number/flowsbyUser' + '/' + obj + '/' + sessionStorage.getItem('userId'), function(err, data) {
             if(err != null) console.error(err);
             else {
                 flowInfo = data.data;
@@ -454,7 +454,7 @@
         document.getElementById('pattern2').innerHTML += text;
     }
     function patternSearch() {
-        var url = 'http://203.252.195.182:8080/flowsbyUserFindPattern' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId');
+        var url = 'http://ip address:port number/flowsbyUserFindPattern' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId');
         var text = "";
         var patternText = "";
         for(var i = 0; i <= patternNum1; i++) {
@@ -505,7 +505,7 @@
 
     function showEvent(appName, type, detail) {
         appName = decodeURI(appName);
-        getJSON('http://203.252.195.182:8080/flowsbyUser' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type, function(err, data) {
+        getJSON('http://ip address:port number/flowsbyUser' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type, function(err, data) {
             if(err != null) console.error(err);
             else {
                 paging(1, data.data, detail);
@@ -531,8 +531,7 @@
                 methodName_sub = methodName_ori;
             }
         }
-        //console.log('http://203.252.195.182:8080/flowsbyUserEorAorM' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type + '/' + methodName_sub);
-        getJSON('http://203.252.195.182:8080/flowsbyUserEorAorM' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type + '/' + methodName_sub, function(err, data) {
+        getJSON('http://ip address:port number/flowsbyUserEorAorM' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type + '/' + methodName_sub, function(err, data) {
             if(err != null) console.error(err);
             else {
                 paging(1, data.data, detail);
@@ -544,7 +543,7 @@
     function showGraph(obj) {
         var month = [];
         var graphData = [];
-        getJSON('http://203.252.195.182:8080/flowsbyUser/graph/' + obj + '/' + sessionStorage.getItem("userId"), function (err, data) {
+        getJSON('http://ip address:port number/flowsbyUser/graph/' + obj + '/' + sessionStorage.getItem("userId"), function (err, data) {
             if (err != null) console.error(err);
             else {
                 var flowData = data.data;
@@ -603,7 +602,7 @@
         var elements = objString.split("\n");
         var appName = document.getElementById("trace").innerText;
         appName = appName.substring(0, appName.length-11);
-        var url = "http://203.252.195.182:8080/flowsbyUser/" + appName + "/" + sessionStorage.getItem("userId") + "/";
+        var url = "http://ip address:port number/flowsbyUser/" + appName + "/" + sessionStorage.getItem("userId") + "/";
         if(elements[0].includes("event")){
             url += "whyEvent/";
             if(elements[1] === "") {
@@ -765,7 +764,7 @@
         var elements = objString.split("\n");
         var appName = document.getElementById("trace").innerText;
         appName = appName.substring(0, appName.length-11);
-        var url = "http://203.252.195.182:8080/flowsbyUser/" + appName + "/" + sessionStorage.getItem("userId") + "/";
+        var url = "http://ip address:port number/flowsbyUser/" + appName + "/" + sessionStorage.getItem("userId") + "/";
         if(elements[0].includes("event")){
             url += "whatAction/";
             if(elements[1] === "") {
