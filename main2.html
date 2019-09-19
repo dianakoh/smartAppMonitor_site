@@ -448,7 +448,7 @@
         //var text = "<p style='display: inline-block'>or</p><select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
         var text = "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addSelectOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
         //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
-        document.getElementById('pattern1').innerHTML += text;
+        document.getElementById('pattern1').innerHTML += "<p style='display: inline;'>or</p>" + text;
         for(var i = 0; i < patternNum1; i++) {
             var selectedType = document.getElementById("fPattern" + i);
             selectedType.value = fpatternType;
@@ -464,7 +464,7 @@
         //var text = "<p style='display: inline-block'>or</p><select id='pPattern" + patternNum2 + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
         var text = "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addSelectOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
         //text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
-        document.getElementById('pattern2').innerHTML += text;
+        document.getElementById('pattern2').innerHTML += "<p style='display: inline;'>or</p>" + text;
         for(var i = 0; i < patternNum2; i++) {
             var selectedType = document.getElementById("pPattern" + i);
             selectedType.value = ppatternType;
