@@ -177,6 +177,7 @@
             if(err != null) console.error(err);
             else {
                 flowInfo = data.data;
+                console.log(flowInfo);
                 for(var i = 0; i < flowInfo.length; i++) {
                     if(flowInfo[i].methodType == "event") eventArr.push(flowInfo[i].methodName);
                     if(flowInfo[i].methodType == "action") actionArr.push(flowInfo[i].methodName);
@@ -374,11 +375,14 @@
         document.getElementById("flowinfo").innerHTML = text;
     }
 
+    var fpatternType;
+    var ppatternType;
+    var fpatternSelected = [];
+    var ppatternSelected = [];
     function addSelectOptions(type) {
         var text = "";
         var selectedType = document.getElementById(type);
         var selectedValue = selectedType.options[selectedType.selectedIndex].value;
-
         if(selectedValue == "event") {
             text += "<select id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'><option value='' selected>--Select Options--</option>";
             for(var i = 0; i < eventArr.length; i++) {
@@ -393,44 +397,80 @@
             }
             text += "</select>";
         }
-        console.log(text);
         document.getElementById("pattern1").innerHTML += text;
+        selectedType = document.getElementById(type);
+        selectedType.value = selectedValue;
+        fpatternType = selectedValue;
+        for(var i = 0; i < patternNum1; i++) {
+            var selectedType = document.getElementById("fPattern" + i);
+            selectedType.value = fpatternType;
+            selectedType = document.getElementById("fName" + i);
+            selectedType.value = fpatternSelected[i];
+        }
     }
 
     function addSelectOptions2(type) {
         var text = "";
         var selectedType = document.getElementById(type);
         var selectedValue = selectedType.options[selectedType.selectedIndex].value;
-
         if(selectedValue == "event") {
-            text += "<select id='pName" + patternNum1 + "'" + " name='pName" + patternNum2 + "'><option value='' selected>--Select Options--</option>";
+            text += "<select id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'><option value='' selected>--Select Options--</option>";
             for(var i = 0; i < eventArr.length; i++) {
                 text += "<option value='" + eventArr[i] + "'>" + eventArr[i] + "</option>";
             }
             text += "</select>";
         }
         else if(selectedValue == "action") {
-            text += "<select id='pName" + patternNum1 + "'" + " name='pName" + patternNum2 + "'><option value='' selected>--Select Options--</option>";
+            text += "<select id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'><option value='' selected>--Select Options--</option>";
             for(var i = 0; i < actionArr.length; i++) {
                 text += "<option value='" + actionArr[i] + "'>" + actionArr[i] + "</option>";
             }
             text += "</select>";
         }
-
         document.getElementById("pattern2").innerHTML += text;
+        selectedType = document.getElementById(type);
+        selectedType.value = selectedValue;
+        ppatternType = selectedValue;
+        for(var i = 0; i < patternNum2; i++) {
+            var selectedType = document.getElementById("pPattern" + i);
+            selectedType.value = ppatternType;
+            selectedType = document.getElementById("pName" + i);
+            selectedType.value = ppatternSelected[i];
+        }
     }
 
     function addPattern1() {
+        var preSelectedType = document.getElementById("fName" + patternNum1);
+        var selectedValue = preSelectedType.options[preSelectedType.selectedIndex].value;
+        fpatternSelected.push(selectedValue);
+        //console.log(fpatternSelected);
         patternNum1++;
-        var text = "<p style='display: inline-block'>or</p><select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-        text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
+        //var text = "<p style='display: inline-block'>or</p><select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+        var text = "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addSelectOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+        //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
         document.getElementById('pattern1').innerHTML += text;
+        for(var i = 0; i < patternNum1; i++) {
+            var selectedType = document.getElementById("fPattern" + i);
+            selectedType.value = fpatternType;
+            selectedType = document.getElementById("fName" + i);
+            selectedType.value = fpatternSelected[i];
+        }
     }
     function addPattern2() {
+        var preSelectedType = document.getElementById("pName" + patternNum2);
+        var selectedValue = preSelectedType.options[preSelectedType.selectedIndex].value;
+        ppatternSelected.push(selectedValue);
         patternNum2++;
-        var text = "<p style='display: inline-block'>or</p><select id='pPattern" + patternNum2 + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-        text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
+        //var text = "<p style='display: inline-block'>or</p><select id='pPattern" + patternNum2 + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
+        var text = "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addSelectOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+        //text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
         document.getElementById('pattern2').innerHTML += text;
+        for(var i = 0; i < patternNum2; i++) {
+            var selectedType = document.getElementById("pPattern" + i);
+            selectedType.value = ppatternType;
+            selectedType = document.getElementById("pName" + i);
+            selectedType.value = ppatternSelected[i];
+        }
     }
     function patternSearch() {
         var url = 'http://' + ipAddress + port1 + '/flowsbyUserFindPattern' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId');
