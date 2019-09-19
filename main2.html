@@ -11,7 +11,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="image/monitoring_Logo.jpg"/>
     <link rel="shortcut icon" sizes="192x192" href="image/monitoring_Logo.jpg"/>
     <link rel="stylesheet" href="css/mainpagestyle2.css">
-    <!--<link rel="stylesheet" href="css/dropdown.css">-->
 </head>
 <body>
 
@@ -22,14 +21,12 @@
 <div class="row">
     <div class="col-3 col-s-3 menu">
         <ul>
-            <li><a href="http://ip address:port number/code">Code Instrument</a></li>
+            <li id="codeInsLink"></li>
             <li><a href="https://graph.api.smartthings.com">SmartThings IDE</a></li>
         </ul>
     </div>
 
     <div class="col-6 col-s-9">
-        <!--<h1>The City</h1>
-        <p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>-->
         <div id="mainContents">
             <div id="applist">
                 <p>appList</p>
@@ -63,7 +60,7 @@
 </div>
 
 <div class="footer">
-    <!--<p>Resize the browser window to see how the content respond to the resizing.</p>-->
+
 </div>
 
 <script src="js/getJsonData.js"></script>
@@ -73,8 +70,9 @@
     var myChart;
     var patternNum1 = 0;
     var patternNum2 = 0;
+    document.getElementById("codeInsLink").innerHTML = "<a href=\"http://" + ipAddress + port2 + "/code\">Code Instrument</a>"; //<a href="http://203.252.195.182:3030/code">Code Instrument</a>
     document.getElementById("userId").innerHTML += " " + sessionStorage.getItem("userId");
-    getJSON('http://ip address:port number/smartapps' + '/' + sessionStorage.getItem("userId"),  function(err, data) {
+    getJSON('http://' + ipAddress + port1 + '/smartapps' + '/' + sessionStorage.getItem("userId"),  function(err, data) {
         if(err != null) console.error(err);
         else {
             smartAppInfo = data;
@@ -85,7 +83,6 @@
                 if(detail != null) {
                     detail = "\"" + detail.substring(1, detail.length - 1) + "\"";
                 }
-                //console.log(data.data[i].detail);
                 text += "<li><h4 onclick=showInfo(this.innerHTML," + detail+ ");>" + app + "</h4></li>";
             }
             text += "</ul>";
@@ -94,7 +91,7 @@
     });
 
     var appName = "";
-    var socket = io('http://ip address:port number', {
+    var socket = io('http://' + ipAddress + port1, {
         query:  'userId='+sessionStorage.getItem("userId")
     });
     socket.on('send data event', function(data) {
@@ -132,7 +129,6 @@
                 img_path = "\"image/" + capability + ".png\"";
             else
                 img_path = "\"image/" + capability + "_" + name + ".png\"";
-            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
             text += "<li>[" + type + "]</li>";
             text += "<li><img src=" + img_path + ">" + "</li>";
@@ -145,7 +141,6 @@
         }
         if(type == "action") {
             var img_path = "\"image/" + capability + "_" + name + ".png\"";
-            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
             text += "<li>[" + type + "]</li>";
             text += "<li><img src=" + img_path + ">" + "</li>";
@@ -166,10 +161,6 @@
     }
 
     function showInfo(obj, detail) {
-        //console.log(obj);
-        /*for(var i = 0; i < smartAppInfo.length; i++) {
-                if(smartAppInfo[i].appName == )
-        }*/
         sessionStorage.setItem('appName', obj);
         showFlow(obj, detail);
         showGraph(obj);
@@ -182,7 +173,7 @@
         eventArr = [];
         actionArr = [];
         document.getElementById("trace").innerHTML = obj + " trace data";
-        getJSON('http://ip address:port number/flowsbyUser' + '/' + obj + '/' + sessionStorage.getItem('userId'), function(err, data) {
+        getJSON('http://' + ipAddress + port1 + '/flowsbyUser' + '/' + obj + '/' + sessionStorage.getItem('userId'), function(err, data) {
             if(err != null) console.error(err);
             else {
                 flowInfo = data.data;
@@ -198,8 +189,6 @@
                 });
                 eventArr = filter1;
                 actionArr = filter2;
-                //console.log(eventArr);
-                //console.log(actionArr);
                 paging(1, flowInfo, detail);
                 showFlowData(1, flowInfo, detail);
             }
@@ -295,13 +284,11 @@
             text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
             text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addSelectOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
-            //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
             text += "</div>";
             text += "<button onclick='addPattern1();'>+</button>";
             text += "<p>---></p>";
             text += "<div id='pattern2'>";
             text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addSelectOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
-            //text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
             text += "</div>";
             text += "<button onclick='addPattern2();'>+</button>";
             text += "<button style='display: block' onclick='patternSearch();'>search</button>";
@@ -322,13 +309,11 @@
             text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
             text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addSelectOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
-            //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
             text += "</div>";
             text += "<button onclick='addPattern1();'>+</button>";
             text += "<p>---></p>";
             text += "<div id='pattern2'>";
             text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addSelectOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
-            //text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
             text += "</div>";
             text += "<button onclick='addPattern2();'>+</button>";
             text += "<button style='display: block' onclick='patternSearch();'>search</button>";
@@ -344,7 +329,7 @@
             var deviceName = data[i].deviceName;
             if(deviceName.includes("[") && deviceName.includes("]")) deviceName = deviceName.substring(1, deviceName.length-1);
             var datetime = data[i].createdAt;
-            //text += "<span style='display:inline-block;width:30%'><ul style='list-style: none'>" + "<li>[" + type + "]</li><li><img src=\"image/play.png\" style=\"width:20px; height:20px;\">" + "</li><li>name: " + name + "</li><li>device: " + deviceName + "</li><li>occur: " + datetime + "</li></ul></span>"
+
             if(type == "handlerMethod") {
                 text += "<span class='elementSpan'><ul>";
                 text += "<li>[" + type + "]</li>";
@@ -363,7 +348,6 @@
                     img_path = "\"image/" + capability + ".png\"";
                 else
                     img_path = "\"image/" + capability + "_" + name + ".png\"";
-                //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
                 text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                 text += "<li>[" + type + "]</li>";
                 text += "<li><img src=" + img_path + ">" + "</li>";
@@ -376,7 +360,6 @@
             }
             if(type == "action") {
                 var img_path = "\"image/" + capability + "_" + name + ".png\"";
-                //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
                 text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                 text += "<li>[" + type + "]</li>";
                 text += "<li><img src=" + img_path + ">" + "</li>";
@@ -395,9 +378,7 @@
         var text = "";
         var selectedType = document.getElementById(type);
         var selectedValue = selectedType.options[selectedType.selectedIndex].value;
-        //selectedType.select(selectedType.selectedIndex);
-        //text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event' onclick='addSelectOptions(event);'>event</option><option value='action' onclick='addSelectOptions(action);'>action</option></select>";
-        //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
+
         if(selectedValue == "event") {
             text += "<select id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'><option value='' selected>--Select Options--</option>";
             for(var i = 0; i < eventArr.length; i++) {
@@ -420,9 +401,7 @@
         var text = "";
         var selectedType = document.getElementById(type);
         var selectedValue = selectedType.options[selectedType.selectedIndex].value;
-        //selectedType.select(selectedType.selectedIndex);
-        //text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event' onclick='addSelectOptions(event);'>event</option><option value='action' onclick='addSelectOptions(action);'>action</option></select>";
-        //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
+
         if(selectedValue == "event") {
             text += "<select id='pName" + patternNum1 + "'" + " name='pName" + patternNum2 + "'><option value='' selected>--Select Options--</option>";
             for(var i = 0; i < eventArr.length; i++) {
@@ -437,7 +416,7 @@
             }
             text += "</select>";
         }
-        console.log(text);
+
         document.getElementById("pattern2").innerHTML += text;
     }
 
@@ -454,7 +433,7 @@
         document.getElementById('pattern2').innerHTML += text;
     }
     function patternSearch() {
-        var url = 'http://ip address:port number/flowsbyUserFindPattern' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId');
+        var url = 'http://' + ipAddress + port1 + '/flowsbyUserFindPattern' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId');
         var text = "";
         var patternText = "";
         for(var i = 0; i <= patternNum1; i++) {
@@ -489,7 +468,6 @@
            }
            else {
                if(data.success == true) {
-                   //alert("There is the pattern " + patternText);
                    console.log(data);
                    var url = "patternPopup.html?data=" + JSON.stringify(data.data);
                    window.open(url, "Finded-Pattern", "width=400, height=300");
@@ -505,7 +483,7 @@
 
     function showEvent(appName, type, detail) {
         appName = decodeURI(appName);
-        getJSON('http://ip address:port number/flowsbyUser' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type, function(err, data) {
+        getJSON('http://' + ipAddress + port1 + '/flowsbyUser' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type, function(err, data) {
             if(err != null) console.error(err);
             else {
                 paging(1, data.data, detail);
@@ -531,7 +509,7 @@
                 methodName_sub = methodName_ori;
             }
         }
-        getJSON('http://ip address:port number/flowsbyUserEorAorM' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type + '/' + methodName_sub, function(err, data) {
+        getJSON('http://' + ipAddress + port1 + '/flowsbyUserEorAorM' + '/' + appName + '/' + sessionStorage.getItem('userId') + '/' + type + '/' + methodName_sub, function(err, data) {
             if(err != null) console.error(err);
             else {
                 paging(1, data.data, detail);
@@ -543,7 +521,7 @@
     function showGraph(obj) {
         var month = [];
         var graphData = [];
-        getJSON('http://ip address:port number/flowsbyUser/graph/' + obj + '/' + sessionStorage.getItem("userId"), function (err, data) {
+        getJSON('http://' + ipAddress + port1 + '/flowsbyUser/graph/' + obj + '/' + sessionStorage.getItem("userId"), function (err, data) {
             if (err != null) console.error(err);
             else {
                 var flowData = data.data;
@@ -552,17 +530,16 @@
                     month.push(flowData[i].date);
                     graphData.push(flowData[i].countAll);
                 }
-                //console.log(month);
-                //console.log(graphData);
+
                 var ctx = document.getElementById('myChart');
                 myChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        //labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+
                         labels: month,
                         datasets: [{
                             label: 'smart App flows by month',
-                            //data: [12, 19, 3, 5, 2, 3],
+
                             data: graphData,
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.2)',
@@ -602,7 +579,7 @@
         var elements = objString.split("\n");
         var appName = document.getElementById("trace").innerText;
         appName = appName.substring(0, appName.length-11);
-        var url = "http://ip address:port number/flowsbyUser/" + appName + "/" + sessionStorage.getItem("userId") + "/";
+        var url = "http://" + ipAddress + port1 + "/flowsbyUser/" + appName + "/" + sessionStorage.getItem("userId") + "/";
         if(elements[0].includes("event")){
             url += "whyEvent/";
             if(elements[1] === "") {
@@ -623,7 +600,7 @@
                     else
                         var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
-                    //console.log(proveInfo.length);
+
                     for(var i = 0; i < proveInfo.length; i++) {
                         var type = proveInfo[i].methodType;
                         var name = proveInfo[i].methodName;
@@ -650,7 +627,7 @@
                                 img_path = "\"image/" + capability + ".png\"";
                             else
                                 img_path = "\"image/" + capability + "_" + name + ".png\"";
-                            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul style='list-style:none'>";
+
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
                             text += "<li><img src=" + img_path + ">" + "</li>";
@@ -663,7 +640,6 @@
                         }
                         if(type == "action") {
                             var img_path = "\"image/" + capability + "_" + name + ".png\"";
-                            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
                             text += "<li><img src=" + img_path + ">" + "</li>";
@@ -700,7 +676,7 @@
                     else
                         var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
-                    //console.log(proveInfo.length);
+
                     for(var i = 0; i < proveInfo.length; i++) {
                         var type = proveInfo[i].methodType;
                         var name = proveInfo[i].methodName;
@@ -727,7 +703,6 @@
                                 img_path = "\"image/" + capability + ".png\"";
                             else
                                 img_path = "\"image/" + capability + "_" + name + ".png\"";
-                            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
                             text += "<li><img src=" + img_path + ">" + "</li>";
@@ -740,7 +715,6 @@
                         }
                         if(type == "action") {
                             var img_path = "\"image/" + capability + "_" + name + ".png\"";
-                            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
                             text += "<li><img src=" + img_path + ">" + "</li>";
@@ -764,7 +738,7 @@
         var elements = objString.split("\n");
         var appName = document.getElementById("trace").innerText;
         appName = appName.substring(0, appName.length-11);
-        var url = "http://ip address:port number/flowsbyUser/" + appName + "/" + sessionStorage.getItem("userId") + "/";
+        var url = "http://" + ipAddress + port1 + "/flowsbyUser/" + appName + "/" + sessionStorage.getItem("userId") + "/";
         if(elements[0].includes("event")){
             url += "whatAction/";
             if(elements[1] === "") {
@@ -785,7 +759,7 @@
                     else
                         var text = "<h5>what actions are derived from the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " event at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
-                    //console.log(proveInfo.length);
+
                     for(var i = 0; i < proveInfo.length; i++) {
                         var type = proveInfo[i].methodType;
                         var name = proveInfo[i].methodName;
@@ -812,7 +786,6 @@
                                 img_path = "\"image/" + capability + ".png\"";
                             else
                                 img_path = "\"image/" + capability + "_" + name + ".png\"";
-                            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul style='list-style:none'>";
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
                             text += "<li><img src=" + img_path + ">" + "</li>";
@@ -825,7 +798,6 @@
                         }
                         if(type == "action") {
                             var img_path = "\"image/" + capability + "_" + name + ".png\"";
-                            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
                             text += "<li><img src=" + img_path + ">" + "</li>";
@@ -861,7 +833,7 @@
                     else
                         var text = "<h5>what events are caused by the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " action at " + elements[4].split(' ')[1] + "</h5>";
                     var proveInfo = data.data;
-                    //console.log(proveInfo.length);
+
                     for(var i = 0; i < proveInfo.length; i++) {
                         var type = proveInfo[i].methodType;
                         var name = proveInfo[i].methodName;
@@ -888,7 +860,7 @@
                                 img_path = "\"image/" + capability + ".png\"";
                             else
                                 img_path = "\"image/" + capability + "_" + name + ".png\"";
-                            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
+
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
                             text += "<li><img src=" + img_path + ">" + "</li>";
@@ -901,7 +873,7 @@
                         }
                         if(type == "action") {
                             var img_path = "\"image/" + capability + "_" + name + ".png\"";
-                            //text += "<span style='display:inline-block;width:30%' onclick='prove(this.innerText);'><ul style='list-style:none'>";
+
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
                             text += "<li><img src=" + img_path + ">" + "</li>";
