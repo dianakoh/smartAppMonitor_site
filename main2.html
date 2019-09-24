@@ -168,10 +168,16 @@
 
     var eventArr = [];
     var actionArr = [];
+    var eventDevice = [];
+    var actionDevice = [];
+    var deviceEventArr = {};
+    var deviceActionArr = {};
     function showFlow(obj, detail) {
         var flowInfo;
         eventArr = [];
         actionArr = [];
+        deviceEventArr = {};
+        deviceActionArr = {};
         document.getElementById("trace").innerHTML = obj + " trace data";
         getJSON('http://' + ipAddress + port1 + '/flowsbyUser' + '/' + obj + '/' + sessionStorage.getItem('userId'), function(err, data) {
             if(err != null) console.error(err);
@@ -179,17 +185,39 @@
                 flowInfo = data.data;
                 console.log(flowInfo);
                 for(var i = 0; i < flowInfo.length; i++) {
-                    if(flowInfo[i].methodType == "event") eventArr.push(flowInfo[i].methodName);
-                    if(flowInfo[i].methodType == "action") actionArr.push(flowInfo[i].methodName);
+                    if(flowInfo[i].methodType == "event") {
+                        eventArr.push(flowInfo[i].methodName);
+                        eventDevice.push(flowInfo[i].deviceName);
+                    }
+                    if(flowInfo[i].methodType == "action") {
+                        actionArr.push(flowInfo[i].methodName);
+                        actionDevice.push(flowInfo[i].deviceName);
+                    }
+                    if(flowInfo[i].methodType == "event") {
+                        deviceEventArr[flowInfo[i].deviceName] = flowInfo[i].methodName;
+                    }
+                    if(flowInfo[i].methodType == "action") {
+                        deviceActionArr[flowInfo[i].deviceName] = flowInfo[i].methodName;
+                    }
                 }
-                let filter1 = eventArr.filter((item, idx, array) => {
+                //console.log(deviceEventArr);
+                //console.log(deviceActionArr);
+                let filter = eventArr.filter((item, idx, array) => {
                     return array.indexOf(item) === idx;
                 });
-                let filter2 = actionArr.filter((item, idx, array) => {
+                eventArr = filter;
+                filter = actionArr.filter((item, idx, array) => {
                     return array.indexOf(item) === idx;
                 });
-                eventArr = filter1;
-                actionArr = filter2;
+                actionArr = filter;
+                filter = eventDevice.filter((item, idx, array) => {
+                    return array.indexOf(item) === idx;
+                });
+                eventDevice = filter;
+                filter = actionDevice.filter((item, idx, array) => {
+                    return array.indexOf(item) === idx;
+                });
+                actionDevice = filter;
                 paging(1, flowInfo, detail);
                 showFlowData(1, flowInfo, detail);
             }
@@ -284,12 +312,16 @@
             text += "<div class='dropdown-content'>";
             text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
-            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addSelectOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='fDevice" + patternNum1 + "'" + " onchange='addNameOptions(\"fDevice" + patternNum1 + "\");'></select>";
+            text += "<select id='fName" + patternNum1 + "'" + "></select>";
             text += "</div>";
             text += "<button onclick='addPattern1();'>+</button>";
             text += "<p>---></p>";
             text += "<div id='pattern2'>";
-            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addSelectOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addDeviceOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='pDevice" + patternNum2 + "'" + " onchange='addNameOptions2(\"pDevice" + patternNum2 + "\");'></select>";
+            text += "<select id='pName" + patternNum2 + "'" + "></select>";
             text += "</div>";
             text += "<button onclick='addPattern2();'>+</button>";
             text += "<button style='display: block' onclick='patternSearch();'>search</button>";
@@ -309,12 +341,16 @@
             text += "<div class='dropdown-content'>";
             text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
-            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addSelectOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='fDevice" + patternNum1 + "'" + " onchange='addNameOptions(\"fDevice" + patternNum1 + "\");'></select>";
+            text += "<select id='fName" + patternNum1 + "'" + "></select>";
             text += "</div>";
             text += "<button onclick='addPattern1();'>+</button>";
             text += "<p>---></p>";
             text += "<div id='pattern2'>";
-            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addSelectOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addDeviceOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='pDevice" + patternNum2 + "'" + " onchange='addNameOptions2(\"pDevice" + patternNum2 + "\");'></select>";
+            text += "<select id='pName" + patternNum2 + "'" + "></select>";
             text += "</div>";
             text += "<button onclick='addPattern2();'>+</button>";
             text += "<button style='display: block' onclick='patternSearch();'>search</button>";
@@ -379,98 +415,115 @@
     var ppatternType;
     var fpatternSelected = [];
     var ppatternSelected = [];
-    function addSelectOptions(type) {
+
+    function addDeviceOptions(type) {
         var text = "";
-        var selectedType = document.getElementById(type);
-        var selectedValue = selectedType.options[selectedType.selectedIndex].value;
+        var selectedValue = $('#' + type).val();
         if(selectedValue == "event") {
-            text += "<select id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'><option value='' selected>--Select Options--</option>";
-            for(var i = 0; i < eventArr.length; i++) {
-                text += "<option value='" + eventArr[i] + "'>" + eventArr[i] + "</option>";
+            $('#fDevice' + type.toString().charAt(type.toString().length-1)).empty();
+
+            var option = $("<option value='' selected>--Selected Option--</option>");
+            $('#fDevice' + type.toString().charAt(type.toString().length-1)).append(option);
+            for(var count = 0; count < eventDevice.length; count++){
+                option = $("<option>"+eventDevice[count]+"</option>");
+                $('#fDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             }
-            text += "</select>";
+            /*출처: https://yamea-guide.tistory.com/entry/제이쿼리-동적으로-select-option-추가-하기empty와-append [기타치는 개발자의 야매 가이드]*/
         }
         else if(selectedValue == "action") {
-            text += "<select id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'><option value='' selected>--Select Options--</option>";
-            for(var i = 0; i < actionArr.length; i++) {
-                text += "<option value='" + actionArr[i] + "'>" + actionArr[i] + "</option>";
+            $('#fDevice' + type.toString().charAt(type.toString().length-1)).empty();
+
+            var option = $("<option value='' selected>--Selected Option--</option>");
+            $('#fDevice' + type.toString().charAt(type.toString().length-1)).append(option);
+            for(var count = 0; count < actionDevice.length; count++){
+                option = $("<option>"+actionDevice[count]+"</option>");
+                $('#fDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             }
-            text += "</select>";
-        }
-        document.getElementById("pattern1").innerHTML += text;
-        selectedType = document.getElementById(type);
-        selectedType.value = selectedValue;
-        fpatternType = selectedValue;
-        for(var i = 0; i < patternNum1; i++) {
-            var selectedType = document.getElementById("fPattern" + i);
-            selectedType.value = fpatternType;
-            selectedType = document.getElementById("fName" + i);
-            selectedType.value = fpatternSelected[i];
         }
     }
 
-    function addSelectOptions2(type) {
+    function addNameOptions(type) {
         var text = "";
-        var selectedType = document.getElementById(type);
-        var selectedValue = selectedType.options[selectedType.selectedIndex].value;
+        var selectedType = $('#fPattern' + type.toString().charAt(type.toString().length-1)).val();
+        var selectedValue = $('#' + type).val();
+        if(selectedType == "event") {
+            $('#fName' + type.toString().charAt(type.toString().length - 1)).empty();
+            var option = $("<option value='' selected>--Selected Option--</option>");
+            $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            option = $("<option>" + deviceEventArr[selectedValue] + "</option>");
+            $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            /*for(var count = 0; count < deviceEventArr.length; count++) {
+            var option = $("<option>"+deviceEventArr[selectedValue]+"</option>");
+            $('#fName' + type.toString().charAt(type.toString().length-1)).append(option);
+        }*/
+        }
+        if(selectedType == "action") {
+            $('#fName' + type.toString().charAt(type.toString().length - 1)).empty();
+            var option = $("<option value='' selected>--Selected Option--</option>");
+            $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            option = $("<option>" + deviceActionArr[selectedValue] + "</option>");
+            $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+        }
+    }
+
+    function addDeviceOptions2(type) {
+        var text = "";
+        var selectedValue = $('#' + type).val();
         if(selectedValue == "event") {
-            text += "<select id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'><option value='' selected>--Select Options--</option>";
-            for(var i = 0; i < eventArr.length; i++) {
-                text += "<option value='" + eventArr[i] + "'>" + eventArr[i] + "</option>";
+            $('#pDevice' + type.toString().charAt(type.toString().length-1)).empty();
+            var option = $("<option value='' selected>--Selected Option--</option>");
+            $('#pDevice' + type.toString().charAt(type.toString().length-1)).append(option);
+            for(var count = 0; count < eventDevice.length; count++){
+                option = $("<option>"+eventDevice[count]+"</option>");
+                $('#pDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             }
-            text += "</select>";
+            /*출처: https://yamea-guide.tistory.com/entry/제이쿼리-동적으로-select-option-추가-하기empty와-append [기타치는 개발자의 야매 가이드]*/
         }
         else if(selectedValue == "action") {
-            text += "<select id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'><option value='' selected>--Select Options--</option>";
-            for(var i = 0; i < actionArr.length; i++) {
-                text += "<option value='" + actionArr[i] + "'>" + actionArr[i] + "</option>";
+            $('#pDevice' + type.toString().charAt(type.toString().length-1)).empty();
+            var option = $("<option value='' selected>--Selected Option--</option>");
+            $('#pDevice' + type.toString().charAt(type.toString().length-1)).append(option);
+            for(var count = 0; count < actionDevice.length; count++){
+                option = $("<option>"+actionDevice[count]+"</option>");
+                $('#pDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             }
-            text += "</select>";
         }
-        document.getElementById("pattern2").innerHTML += text;
-        selectedType = document.getElementById(type);
-        selectedType.value = selectedValue;
-        ppatternType = selectedValue;
-        for(var i = 0; i < patternNum2; i++) {
-            var selectedType = document.getElementById("pPattern" + i);
-            selectedType.value = ppatternType;
-            selectedType = document.getElementById("pName" + i);
-            selectedType.value = ppatternSelected[i];
+    }
+    function addNameOptions2(type) {
+        var text = "";
+        var selectedType = $('#pPattern' + type.toString().charAt(type.toString().length-1)).val();
+        var selectedValue = $('#' + type).val();
+        if(selectedType == "event") {
+            $('#pName' + type.toString().charAt(type.toString().length - 1)).empty();
+            var option = $("<option value='' selected>--Selected Option--</option>");
+            $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            option = $("<option>" + deviceEventArr[selectedValue] + "</option>");
+            $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+        }
+        if(selectedType == "action") {
+            $('#pName' + type.toString().charAt(type.toString().length - 1)).empty();
+            var option = $("<option value='' selected>--Selected Option--</option>");
+            $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            option = $("<option>" + deviceActionArr[selectedValue] + "</option>");
+            $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
         }
     }
 
     function addPattern1() {
-        var preSelectedType = document.getElementById("fName" + patternNum1);
-        var selectedValue = preSelectedType.options[preSelectedType.selectedIndex].value;
-        fpatternSelected.push(selectedValue);
-        //console.log(fpatternSelected);
         patternNum1++;
-        //var text = "<p style='display: inline-block'>or</p><select id='fPattern" + patternNum1 + "'" + " name='fPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-        var text = "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addSelectOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
-        //text += "<input id='fName" + patternNum1 + "'" + " name='fName" + patternNum1 + "'" + " type='text'>";
-        document.getElementById('pattern1').innerHTML += "<p style='display: inline;'>or</p>" + text;
-        for(var i = 0; i < patternNum1; i++) {
-            var selectedType = document.getElementById("fPattern" + i);
-            selectedType.value = fpatternType;
-            selectedType = document.getElementById("fName" + i);
-            selectedType.value = fpatternSelected[i];
-        }
+        var text = "<p>or</p>";
+        text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+        text += "<select id='fDevice" + patternNum1 + "'" + " onchange='addNameOptions(\"fDevice" + patternNum1 + "\");'></select>";
+        text += "<select id='fName" + patternNum1 + "'" + "></select>";
+        document.getElementById('pattern1').insertAdjacentHTML("afterend", text);
     }
     function addPattern2() {
-        var preSelectedType = document.getElementById("pName" + patternNum2);
-        var selectedValue = preSelectedType.options[preSelectedType.selectedIndex].value;
-        ppatternSelected.push(selectedValue);
         patternNum2++;
-        //var text = "<p style='display: inline-block'>or</p><select id='pPattern" + patternNum2 + "'" + " name='pPattern'><opion value='' selected>--Select Options--</opion><option value='event'>event</option><option value='action'>action</option></select>";
-        var text = "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addSelectOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
-        //text += "<input id='pName" + patternNum2 + "'" + " name='pName" + patternNum2 + "'" + " type='text'>";
-        document.getElementById('pattern2').innerHTML += "<p style='display: inline;'>or</p>" + text;
-        for(var i = 0; i < patternNum2; i++) {
-            var selectedType = document.getElementById("pPattern" + i);
-            selectedType.value = ppatternType;
-            selectedType = document.getElementById("pName" + i);
-            selectedType.value = ppatternSelected[i];
-        }
+        var text = "<p>or</p>";
+        text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addDeviceOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+        text += "<select id='pDevice" + patternNum2 + "'" + " onchange='addNameOptions2(\"pDevice" + patternNum2 + "\");'></select>";
+        text += "<select id='pName" + patternNum2 + "'" + "></select>";
+        document.getElementById('pattern2').insertAdjacentHTML("afterend", text);
     }
     function patternSearch() {
         var url = 'http://' + ipAddress + port1 + '/flowsbyUserFindPattern' + '/' + sessionStorage.getItem('appName') + '/' + sessionStorage.getItem('userId');
@@ -478,28 +531,31 @@
         var patternText = "";
         for(var i = 0; i <= patternNum1; i++) {
             var fp = document.getElementById("fPattern" + i.toString()).value;
+            var fd = document.getElementById("fDevice" + i.toString()).value;
             var fn = document.getElementById("fName" + i.toString()).value;
             if(i == 0) {
                 url += '/pattern1/';
-                text += fp + "=" + fn;
+                text += fp + "=" + fd + "." + fn;
             }
             else
-                text += "|" + fp + "=" + fn;
+                text += '|' + fp + "=" + fd + "." + fn;
         }
         url += text;
         patternText += text;
         text = "";
         for(var i = 0; i <= patternNum2; i++) {
             var pp = document.getElementById("pPattern" + i.toString()).value;
+            var pd = document.getElementById("pDevice" + i.toString()).value;
             var pn = document.getElementById("pName" + i.toString()).value;
             if(i == 0) {
                 url += '/pattern2/';
-                text += pp + "=" + pn;
+                text += pp + "=" + pd + "." + pn;
             }
             else
-                text += "|" + pp + "=" + pn;
+                text += '|' + pp + "=" + pd + "." + pn;
         }
         url += text;
+        console.log(url);
         patternText += "-->" + text;
 
         getJSON(url, function (err, data) {
