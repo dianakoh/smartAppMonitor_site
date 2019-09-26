@@ -314,14 +314,14 @@
             text += "<div class='dropdown-content'>";
             text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
-            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='undefined' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
             text += "<select id='fDevice" + patternNum1 + "'" + " onchange='addNameOptions(\"fDevice" + patternNum1 + "\");'></select>";
             text += "<select id='fName" + patternNum1 + "'" + "></select>";
             text += "</div>";
             text += "<button onclick='addPattern1();'>+</button>";
             text += "<p>---></p>";
             text += "<div id='pattern2'>";
-            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addDeviceOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addDeviceOptions2(\"pPattern" + patternNum2 + "\");'><option value='undefined' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
             text += "<select id='pDevice" + patternNum2 + "'" + " onchange='addNameOptions2(\"pDevice" + patternNum2 + "\");'></select>";
             text += "<select id='pName" + patternNum2 + "'" + "></select>";
             text += "</div>";
@@ -343,18 +343,18 @@
             text += "<div class='dropdown-content'>";
             text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
-            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='undefined' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
             text += "<select id='fDevice" + patternNum1 + "'" + " onchange='addNameOptions(\"fDevice" + patternNum1 + "\");'></select>";
             text += "<select id='fName" + patternNum1 + "'" + "></select>";
             text += "</div>";
-            text += "<button onclick='addPattern1();'>+</button>";
+            text += "<button style='display:block;' onclick='addPattern1();'>+</button>";
             text += "<p>---></p>";
             text += "<div id='pattern2'>";
-            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addDeviceOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+            text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addDeviceOptions2(\"pPattern" + patternNum2 + "\");'><option value='undefined' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
             text += "<select id='pDevice" + patternNum2 + "'" + " onchange='addNameOptions2(\"pDevice" + patternNum2 + "\");'></select>";
             text += "<select id='pName" + patternNum2 + "'" + "></select>";
             text += "</div>";
-            text += "<button onclick='addPattern2();'>+</button>";
+            text += "<button style='display:block;' onclick='addPattern2();'>+</button>";
             text += "<button style='display: block' onclick='patternSearch();'>search</button>";
             text += "</div></div>";
             text += "</div>";
@@ -424,7 +424,7 @@
         if(selectedValue == "event") {
             $('#fDevice' + type.toString().charAt(type.toString().length-1)).empty();
 
-            var option = $("<option value='' selected>--Selected Option--</option>");
+            var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#fDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             for(var count = 0; count < eventDevice.length; count++){
                 option = $("<option>"+eventDevice[count]+"</option>");
@@ -435,7 +435,7 @@
         else if(selectedValue == "action") {
             $('#fDevice' + type.toString().charAt(type.toString().length-1)).empty();
 
-            var option = $("<option value='' selected>--Selected Option--</option>");
+            var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#fDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             for(var count = 0; count < actionDevice.length; count++){
                 option = $("<option>"+actionDevice[count]+"</option>");
@@ -450,7 +450,7 @@
         var selectedValue = $('#' + type).val();
         if(selectedType == "event") {
             $('#fName' + type.toString().charAt(type.toString().length - 1)).empty();
-            var option = $("<option value='' selected>--Selected Option--</option>");
+            var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
             option = $("<option>" + deviceEventArr[selectedValue] + "</option>");
             $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
@@ -461,7 +461,7 @@
         }
         if(selectedType == "action") {
             $('#fName' + type.toString().charAt(type.toString().length - 1)).empty();
-            var option = $("<option value='' selected>--Selected Option--</option>");
+            var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
             option = $("<option>" + deviceActionArr[selectedValue] + "</option>");
             $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
@@ -473,7 +473,7 @@
         var selectedValue = $('#' + type).val();
         if(selectedValue == "event") {
             $('#pDevice' + type.toString().charAt(type.toString().length-1)).empty();
-            var option = $("<option value='' selected>--Selected Option--</option>");
+            var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#pDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             for(var count = 0; count < eventDevice.length; count++){
                 option = $("<option>"+eventDevice[count]+"</option>");
@@ -483,7 +483,7 @@
         }
         else if(selectedValue == "action") {
             $('#pDevice' + type.toString().charAt(type.toString().length-1)).empty();
-            var option = $("<option value='' selected>--Selected Option--</option>");
+            var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#pDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             for(var count = 0; count < actionDevice.length; count++){
                 option = $("<option>"+actionDevice[count]+"</option>");
@@ -497,14 +497,14 @@
         var selectedValue = $('#' + type).val();
         if(selectedType == "event") {
             $('#pName' + type.toString().charAt(type.toString().length - 1)).empty();
-            var option = $("<option value='' selected>--Selected Option--</option>");
+            var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
             option = $("<option>" + deviceEventArr[selectedValue] + "</option>");
             $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
         }
         if(selectedType == "action") {
             $('#pName' + type.toString().charAt(type.toString().length - 1)).empty();
-            var option = $("<option value='' selected>--Selected Option--</option>");
+            var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
             option = $("<option>" + deviceActionArr[selectedValue] + "</option>");
             $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
@@ -514,7 +514,7 @@
     function addPattern1() {
         patternNum1++;
         var text = "<p>or</p>";
-        text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+        text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='undefined' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
         text += "<select id='fDevice" + patternNum1 + "'" + " onchange='addNameOptions(\"fDevice" + patternNum1 + "\");'></select>";
         text += "<select id='fName" + patternNum1 + "'" + "></select>";
         document.getElementById('pattern1').insertAdjacentHTML("afterend", text);
@@ -522,7 +522,7 @@
     function addPattern2() {
         patternNum2++;
         var text = "<p>or</p>";
-        text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addDeviceOptions2(\"pPattern" + patternNum2 + "\");'><option value='' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
+        text += "<select id='pPattern" + patternNum2 + "'" + " name='pPattern' onchange='addDeviceOptions2(\"pPattern" + patternNum2 + "\");'><option value='undefined' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
         text += "<select id='pDevice" + patternNum2 + "'" + " onchange='addNameOptions2(\"pDevice" + patternNum2 + "\");'></select>";
         text += "<select id='pName" + patternNum2 + "'" + "></select>";
         document.getElementById('pattern2').insertAdjacentHTML("afterend", text);
