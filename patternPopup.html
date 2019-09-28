@@ -6,50 +6,78 @@
     <link rel="stylesheet" href="css/mainpagestyle2.css">
 </head>
 <body>
-<div id="patternDiv"><h5>Pattern</h5></div>
+<button style='display: block' onclick='patternSearch();'>next</button>
+<h5>Pattern</h5>
+<div id="patternDiv"></div>
 </body>
+<script src="js/getJsonData.js"></script>
 <script>
     var link = document.location.href;
     var para1 = link.split("?");
-    var para2 = para1[1].substring(5, para1[1].length);
+    var para2 = para1[1].split("&")[0];
+    var para3 = para1[1].split("&")[1];
+    var para2 = para2.substring(5, para2.length);
     var para2 = decodeURI(para2);
     var data = JSON.parse(para2);
+    var para3 = para3.substring(8, para3.length);
+    var number = data[0].id;
 
-    var text = "";
-    for(var i = 0; i < data.length; i++) {
-        var type = data[i].methodType;
-        var name = data[i].methodName;
-        var capability = data[i].capability;
-        var deviceName = data[i].deviceName;
-        if(deviceName.includes("[") && deviceName.includes("]")) deviceName = deviceName.substring(1, deviceName.length-1);
-        if(type == "event") {
-            var img_path;
-            if(capability == "time")
-                img_path = "\"image/" + capability + ".png\"";
-            else
-                img_path = "\"image/" + capability + "_" + name + ".png\"";
-            text += "<span class='elementSpan'><a href='#'><ul>";
-            text += "<li>[" + type + "]</li>";
-            text += "<li><img src=" + img_path + ">" + "</li>";
-            text += "<li>name: " + name + "</li>";
-            text += "<li>cap: " + capability + "</li>";
-            text += "<li>device: " + deviceName + "</li>";
-            text += "</ul></a></span>";
-            text += "<span style='display: inline-block;' class='arrowSpan'>-></span>";
+    showFlowData(data);
+
+    function showFlowData(data) {
+        var text = "";
+        number = data[0].id;
+        for(var i = 0; i < data.length; i++) {
+            var type = data[i].methodType;
+            var name = data[i].methodName;
+            var capability = data[i].capability;
+            var deviceName = data[i].deviceName;
+            var dateTime = data[i].createdAt;
+            var d = dateTime.split("T");
+            var d2 = d[1].split(".");
+            dateTime = d[0] + "-" + d2[0];
+            if(deviceName.includes("[") && deviceName.includes("]")) deviceName = deviceName.substring(1, deviceName.length-1);
+            if(type == "event") {
+                var img_path;
+                if(capability == "time")
+                    img_path = "\"image/" + capability + ".png\"";
+                else
+                    img_path = "\"image/" + capability + "_" + name + ".png\"";
+                text += "<span class='elementSpan'><a href='#'><ul>";
+                text += "<li>[" + type + "]</li>";
+                text += "<li><img src=" + img_path + ">" + "</li>";
+                text += "<li>name: " + name + "</li>";
+                text += "<li>cap: " + capability + "</li>";
+                text += "<li>device: " + deviceName + "</li>";
+                text += "<li>occur: " + dateTime + "</li>";
+                text += "</ul></a></span>";
+                text += "<span style='display: inline-block;' class='arrowSpan'>-></span>";
+            }
+            if(type == "action") {
+                var img_path = "\"image/" + capability + "_" + name + ".png\"";
+                text += "<span class='elementSpan'><a href='#'><ul>";
+                text += "<li>[" + type + "]</li>";
+                text += "<li><img src=" + img_path + ">" + "</li>";
+                text += "<li>name: " + name + "</li>";
+                text += "<li>cap: " + capability + "</li>";
+                text += "<li>device: " + deviceName + "</li>";
+                text += "<li>occur: " + dateTime + "</li>";
+                text += "</ul></a></span>";
+                text += "<span style='display: inline-block;' class='arrowSpan'>-></span>";
+            }
         }
-        if(type == "action") {
-            var img_path = "\"image/" + capability + "_" + name + ".png\"";
-            text += "<span class='elementSpan'><a href='#'><ul>";
-            text += "<li>[" + type + "]</li>";
-            text += "<li><img src=" + img_path + ">" + "</li>";
-            text += "<li>name: " + name + "</li>";
-            text += "<li>cap: " + capability + "</li>";
-            text += "<li>device: " + deviceName + "</li>";
-            text += "</ul></a></span>";
-            text += "<span style='display: inline-block;' class='arrowSpan'>-></span>";
-        }
+        document.getElementById("patternDiv").innerHTML = text;
     }
-    document.getElementById("patternDiv").innerHTML += text;
+    function patternSearch() {
+        getJSON(para3 + '/' + number, function(err, data) {
+            if (err != null) console.error(err);
+            else {
+                flowInfo = data.data;
+                console.log(flowInfo);
+                showFlowData(flowInfo);
 
+            }
+        });
+    }
 </script>
 </html>
