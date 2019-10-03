@@ -370,7 +370,7 @@
             var datetime = data[i].createdAt;
             var d = datetime.split("T");
             var d2 = d[1].split(".");
-            datetime = d[0] + "-" + d2[0];
+            var datetime2 = d[0] + "-" + d2[0];
 
             if(type == "handlerMethod") {
                 text += "<span class='elementSpan'><ul>";
@@ -571,7 +571,7 @@
                if(data.success == true) {
                    console.log(data);
                    var url2 = "patternPopup.html?data=" + JSON.stringify(data.data) + "&address=" + url;
-                   window.open(url2, "Finded-Pattern", "width=400, height=300");
+                   window.open(url2, "Found-Pattern", "width=400, height=300");
 
                }
                if(data.success == false) {
