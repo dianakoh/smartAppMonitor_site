@@ -127,11 +127,17 @@
             var img_path;
             if(capability == "time")
                 img_path = "\"image/" + capability + ".png\"";
-            else
-                img_path = "\"image/" + capability + "_" + name + ".png\"";
+            else {
+                    img_path = "\"image/" + capability + "_" + name + ".png\"";
+            }
             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
             text += "<li>[" + type + "]</li>";
-            text += "<li><img src=" + img_path + ">" + "</li>";
+            if(parseInt(name)) {
+                text += "<li style='color:lightcoral'>" + name + "</li>";
+            }
+            else {
+                text += "<li><img src=" + img_path + ">" + "</li>";
+            }
             text += "<li>name: " + name + "</li>";
             text += "<li>cap: " + capability + "</li>";
             text += "<li>device: " + deviceName + "</li>";
@@ -166,8 +172,10 @@
         showGraph(obj);
     }
 
-    var eventArr = [];
-    var actionArr = [];
+    var eventArr;
+    var t_eventArr = [];
+    var actionArr;
+    var t_actionArr = [];
     var eventDevice = [];
     var actionDevice = [];
     var deviceEventArr = {};
@@ -175,7 +183,9 @@
     function showFlow(obj, detail) {
         var flowInfo;
         eventArr = [];
+        t_eventArr = [];
         actionArr = [];
+        t_actionArr = [];
         eventDevice = [];
         actionDevice = [];
         deviceEventArr = {};
@@ -188,31 +198,34 @@
                 console.log(flowInfo);
                 for(var i = 0; i < flowInfo.length; i++) {
                     if(flowInfo[i].methodType == "event") {
-                        eventArr.push(flowInfo[i].methodName);
+                        //eventArr.push(flowInfo[i].methodName);
                         eventDevice.push(flowInfo[i].deviceName);
+                        t_eventArr.push({methodName:flowInfo[i].methodName, deviceName:flowInfo[i].deviceName});
                     }
                     if(flowInfo[i].methodType == "action") {
-                        actionArr.push(flowInfo[i].methodName);
+                        //actionArr.push(flowInfo[i].methodName);
                         actionDevice.push(flowInfo[i].deviceName);
+                        t_actionArr.push({methodName:flowInfo[i].methodName, deviceName:flowInfo[i].deviceName});
                     }
                     if(flowInfo[i].methodType == "event") {
-                        deviceEventArr[flowInfo[i].deviceName] = flowInfo[i].methodName;
+                        deviceEventArr[flowInfo[i].methodName] = flowInfo[i].deviceName;
                     }
                     if(flowInfo[i].methodType == "action") {
-                        deviceActionArr[flowInfo[i].deviceName] = flowInfo[i].methodName;
+                        deviceActionArr[flowInfo[i].methodName] = flowInfo[i].deviceName;
+                        //console.log(deviceActionArr);
                     }
                 }
-                //console.log(deviceEventArr);
-                //console.log(deviceActionArr);
-                let filter = eventArr.filter((item, idx, array) => {
+                /*let filter = eventArr.filter((item, idx, array) => {
                     return array.indexOf(item) === idx;
                 });
                 eventArr = filter;
                 filter = actionArr.filter((item, idx, array) => {
                     return array.indexOf(item) === idx;
                 });
-                actionArr = filter;
-                filter = eventDevice.filter((item, idx, array) => {
+                actionArr = filter;*/
+                eventArr = remove_duplicates(t_eventArr);
+                actionArr = remove_duplicates(t_actionArr);
+                let filter = eventDevice.filter((item, idx, array) => {
                     return array.indexOf(item) === idx;
                 });
                 eventDevice = filter;
@@ -225,6 +238,25 @@
             }
         });
     }
+
+    function remove_duplicates(objectsArray) {
+        var usedObjects = {};
+
+        for (var i=objectsArray.length - 1;i>=0;i--) {
+            var so = JSON.stringify(objectsArray[i]);
+
+            if (usedObjects[so]) {
+                objectsArray.splice(i, 1);
+
+            } else {
+                usedObjects[so] = true;
+            }
+        }
+
+        return objectsArray;
+
+    }
+
     function paging(currentPage, data, detail) {
         var dataLength = data.length;
         var perPage = 15;
@@ -311,7 +343,7 @@
             text += "</div></div>";
 
             text += "<div class='dropdown'><button class='dropbtn'>Pattern<i class='fa fa-caret-down'></i></button>";
-            text += "<div class='dropdown-content'>";
+            text += "<div class='dropdown-content' id='patternDropdown'>";
             text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
             text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='undefined' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
@@ -340,7 +372,7 @@
             text += "</div></div>";
 
             text += "<div class='dropdown'><button class='dropbtn'>Pattern<i class='fa fa-caret-down'></i></button>";
-            text += "<div class='dropdown-content'>";
+            text += "<div class='dropdown-content' id='patternDropdown'>";
             text += "<p>Find a Pattern</p>";
             text += "<div id='pattern1'>";
             text += "<select id='fPattern" + patternNum1 + "'" + " name='fPattern' onchange='addDeviceOptions(\"fPattern" + patternNum1 + "\");'><option value='undefined' selected>--Selected Option--</option><option value='event'>event</option><option value='action'>action</option></select>";
@@ -370,7 +402,9 @@
             var datetime = data[i].createdAt;
             var d = datetime.split("T");
             var d2 = d[1].split(".");
-            var datetime2 = d[0] + "-" + d2[0];
+            //var datetime2 = d[0] + "-" + d2[0];
+            //var datetime2 = new Date(datetime);
+            //datetime2.setHours(datetime2.getHours()+9);
 
             if(type == "handlerMethod") {
                 text += "<span class='elementSpan'><ul>";
@@ -382,7 +416,12 @@
             }
 
             if(type == "methodCall") {
-
+                /*text += "<span class='elementSpan'><ul>";
+                text += "<li>[" + type + "]</li>";
+                text += "<li>name: " + name + "</li>";
+                text += "<li>occur: " + datetime + "</li>";
+                text += "</ul></span>";
+                text += "<span class='arrowSpan'>-></span>";*/
             }
             if(type == "event") {
                 var img_path;
@@ -392,7 +431,11 @@
                     img_path = "\"image/" + capability + "_" + name + ".png\"";
                 text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                 text += "<li>[" + type + "]</li>";
-                text += "<li><img src=" + img_path + ">" + "</li>";
+                if(parseInt(name)) {
+                    text += "<li style='color:lightcoral'>" + name + "</li>";
+                }
+                else
+                    text += "<li><img src=" + img_path + ">" + "</li>";
                 text += "<li>name: " + name + "</li>";
                 text += "<li>cap: " + capability + "</li>";
                 text += "<li>device: " + deviceName + "</li>";
@@ -433,6 +476,10 @@
                 option = $("<option>"+eventDevice[count]+"</option>");
                 $('#fDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             }
+            /*for(var count = 0; count < eventArr.length; count++){
+                option = $("<option>"+eventArr[count].deviceName+"</option>");
+                $('#fDevice' + type.toString().charAt(type.toString().length-1)).append(option);
+            }*/
             /*출처: https://yamea-guide.tistory.com/entry/제이쿼리-동적으로-select-option-추가-하기empty와-append [기타치는 개발자의 야매 가이드]*/
         }
         else if(selectedValue == "action") {
@@ -444,6 +491,10 @@
                 option = $("<option>"+actionDevice[count]+"</option>");
                 $('#fDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             }
+            /*for(var count = 0; count < actionArr.length; count++){
+                option = $("<option>"+actionArr[count].deviceName+"</option>");
+                $('#fDevice' + type.toString().charAt(type.toString().length-1)).append(option);
+            }*/
         }
     }
 
@@ -455,19 +506,48 @@
             $('#fName' + type.toString().charAt(type.toString().length - 1)).empty();
             var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
-            option = $("<option>" + deviceEventArr[selectedValue] + "</option>");
-            $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            //option = $("<option>" + deviceEventArr[selectedValue] + "</option>");
+            //option = $("<option>" + deviceEventArr.keys(selectedValue) + "</option>");
+            /*for(var key in deviceEventArr) {
+                if(deviceEventArr.hasOwnProperty(key)) {
+                    if(selectedValue == deviceEventArr[key]) {
+                        option = $("<option>" + key + "</option>");
+                        $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+                    }
+                }
+            }*/
             /*for(var count = 0; count < deviceEventArr.length; count++) {
             var option = $("<option>"+deviceEventArr[selectedValue]+"</option>");
             $('#fName' + type.toString().charAt(type.toString().length-1)).append(option);
         }*/
+            for(var count = 0; count < eventArr.length; count++){
+                if(eventArr[count].deviceName == selectedValue) {
+                    option = $("<option>" + eventArr[count].methodName + "</option>");
+                    $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+                }
+            }
+
         }
         if(selectedType == "action") {
             $('#fName' + type.toString().charAt(type.toString().length - 1)).empty();
             var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
-            option = $("<option>" + deviceActionArr[selectedValue] + "</option>");
-            $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            //option = $("<option>" + deviceActionArr[selectedValue] + "</option>");
+            //$('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            /*for(var key in deviceActionArr) {
+                if(deviceActionArr.hasOwnProperty(key)) {
+                    if(selectedValue == deviceActionArr[key]) {
+                        option = $("<option>" + key + "</option>");
+                        $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+                    }
+                }
+            }*/
+            for(var count = 0; count < actionArr.length; count++){
+                if(actionArr[count].deviceName == selectedValue) {
+                    option = $("<option>" + actionArr[count].methodName + "</option>");
+                    $('#fName' + type.toString().charAt(type.toString().length - 1)).append(option);
+                }
+            }
         }
     }
 
@@ -482,6 +562,10 @@
                 option = $("<option>"+eventDevice[count]+"</option>");
                 $('#pDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             }
+            /*for(var count = 0; count < eventArr.length; count++){
+                option = $("<option>"+eventArr[count].deviceName+"</option>");
+                $('#pDevice' + type.toString().charAt(type.toString().length-1)).append(option);
+            }*/
             /*출처: https://yamea-guide.tistory.com/entry/제이쿼리-동적으로-select-option-추가-하기empty와-append [기타치는 개발자의 야매 가이드]*/
         }
         else if(selectedValue == "action") {
@@ -492,6 +576,10 @@
                 option = $("<option>"+actionDevice[count]+"</option>");
                 $('#pDevice' + type.toString().charAt(type.toString().length-1)).append(option);
             }
+            /*for(var count = 0; count < actionArr.length; count++){
+                option = $("<option>"+actionArr[count].deviceName+"</option>");
+                $('#pDevice' + type.toString().charAt(type.toString().length-1)).append(option);
+            }*/
         }
     }
     function addNameOptions2(type) {
@@ -502,15 +590,43 @@
             $('#pName' + type.toString().charAt(type.toString().length - 1)).empty();
             var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
-            option = $("<option>" + deviceEventArr[selectedValue] + "</option>");
-            $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            //option = $("<option>" + deviceEventArr[selectedValue] + "</option>");
+            //$('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            /*for(var key in deviceEventArr) {
+                if(deviceEventArr.hasOwnProperty(key)) {
+                    if(selectedValue == deviceEventArr[key]) {
+                        option = $("<option>" + key + "</option>");
+                        $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+                    }
+                }
+            }*/
+            for(var count = 0; count < eventArr.length; count++){
+                if(eventArr[count].deviceName == selectedValue) {
+                    option = $("<option>" + eventArr[count].methodName + "</option>");
+                    $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+                }
+            }
         }
         if(selectedType == "action") {
             $('#pName' + type.toString().charAt(type.toString().length - 1)).empty();
             var option = $("<option value='undefined' selected>--Selected Option--</option>");
             $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
-            option = $("<option>" + deviceActionArr[selectedValue] + "</option>");
-            $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            //option = $("<option>" + deviceActionArr[selectedValue] + "</option>");
+            //$('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+            /*for(var key in deviceActionArr) {
+                if(deviceActionArr.hasOwnProperty(key)) {
+                    if(selectedValue == deviceActionArr[key]) {
+                        option = $("<option>" + key + "</option>");
+                        $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+                    }
+                }
+            }*/
+            for(var count = 0; count < actionArr.length; count++){
+                if(actionArr[count].deviceName == selectedValue) {
+                    option = $("<option>" + actionArr[count].methodName + "</option>");
+                    $('#pName' + type.toString().charAt(type.toString().length - 1)).append(option);
+                }
+            }
         }
     }
 
@@ -540,10 +656,10 @@
             var fn = document.getElementById("fName" + i.toString()).value;
             if(i == 0) {
                 url += '/pattern1/';
-                text += fp + "=" + fd + "." + fn;
+                text += fp + "=" + fd + "," + fn;
             }
             else
-                text += '|' + fp + "=" + fd + "." + fn;
+                text += '|' + fp + "=" + fd + "," + fn;
         }
         url += text;
         patternText += text;
@@ -554,14 +670,15 @@
             var pn = document.getElementById("pName" + i.toString()).value;
             if(i == 0) {
                 url += '/pattern2/';
-                text += pp + "=" + pd + "." + pn;
+                text += pp + "=" + pd + "," + pn;
             }
             else
-                text += '|' + pp + "=" + pd + "." + pn;
+                text += '|' + pp + "=" + pd + "," + pn;
         }
         url += text;
-        console.log(url);
         patternText += "-->" + text;
+
+        console.log(url);
 
         getJSON(url, function (err, data) {
            if(err != null) {
@@ -689,17 +806,34 @@
                 url += elements[5].split(' ')[1];
             }
             else {
-                url += elements[3].split(':')[1].substring(1) + "/";
-                url += elements[1].split(':')[1].substring(1) + "/";
-                url += elements[4].split(' ')[1];
+                var t;
+                if(elements[1].includes(":")) {
+                    url += elements[3].split(':')[1].substring(1) + "/";
+                    url += elements[1].split(':')[1].substring(1) + "/";
+                    t = elements[4].split(' ')[1];
+                }
+                else {
+                    url += elements[4].split(':')[1].substring(1) + "/";
+                    url += elements[2].split(':')[1].substring(1) + "/";
+                    t = elements[5].split(' ')[1];
+                }
+                //console.log(new Date(t).toISOString());
+                url += t;
             }
+            console.log(url);
             getJSON(url, function(err, data) {
                 if(err != null) console.error(err);
                 else {
                     if(elements[1] === "")
                         var text = "<h5>why was the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " at " + elements[5].split(' ')[1] + "</h5>";
-                    else
-                        var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
+                    else {
+                        if(elements[1].includes(":")) {
+                            var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
+                        }
+                        else {
+                            var text = "<h5>why was the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " at " + elements[5].split(' ')[1] + "</h5>";
+                        }
+                    }
                     var proveInfo = data.data;
 
                     for(var i = 0; i < proveInfo.length; i++) {
@@ -712,7 +846,7 @@
 
                         if(type == "handlerMethod") {
                             text += "<span class='elementSpan'><ul>";
-                            text += "<li>[" + type + "]</li>";
+                            text += "<li>[handler]</li>";
                             text += "<li>name: " + name + "</li>";
                             text += "<li>occur: " + datetime + "</li>";
                             text += "</ul></span>";
@@ -720,7 +854,12 @@
                         }
 
                         if(type == "methodCall") {
-
+                            /*text += "<span class='elementSpan'><ul>";
+                            text += "<li>[" + type + "]</li>";
+                            text += "<li>name: " + name + "</li>";
+                            text += "<li>occur: " + datetime + "</li>";
+                            text += "</ul></span>";
+                            text += "<span class='arrowSpan'>-></span>";*/
                         }
                         if(type == "event") {
                             var img_path;
@@ -731,7 +870,11 @@
 
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
-                            text += "<li><img src=" + img_path + ">" + "</li>";
+                            if(parseInt(name)) {
+                                text += "<li style='color:lightcoral'>" + name + "</li>";
+                            }
+                            else
+                                text += "<li><img src=" + img_path + ">" + "</li>";
                             text += "<li>name: " + name + "</li>";
                             text += "<li>cap: " + capability + "</li>";
                             text += "<li>device: " + deviceName + "</li>";
@@ -765,17 +908,29 @@
                 url += elements[5].split(' ')[1];
             }
             else {
-                url += elements[3].split(':')[1].substring(1) + "/";
-                url += elements[1].split(':')[1].substring(1) + "/";
-                url += elements[4].split(' ')[1];
+                if(elements[1].includes(":")) {
+                    url += elements[3].split(':')[1].substring(1) + "/";
+                    url += elements[1].split(':')[1].substring(1) + "/";
+                    url += elements[4].split(' ')[1];
+                }
+                else {
+                    url += elements[4].split(':')[1].substring(1) + "/";
+                    url += elements[2].split(':')[1].substring(1) + "/";
+                    url += elements[5].split(' ')[1];
+                }
             }
+            console.log(url);
             getJSON(url, function(err, data) {
                 if(err != null) console.error(err);
                 else {
                     if(elements[1] === "")
                         var text = "<h5>why was the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " at " + elements[5].split(' ')[1] + "</h5>";
-                    else
-                        var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
+                    else {
+                        if(elements[1].includes(":"))
+                            var text = "<h5>why was the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " at " + elements[4].split(' ')[1] + "</h5>";
+                        else
+                            var text = "<h5>why was the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " at " + elements[5].split(' ')[1] + "</h5>";
+                    }
                     var proveInfo = data.data;
 
                     for(var i = 0; i < proveInfo.length; i++) {
@@ -788,7 +943,7 @@
 
                         if(type == "handlerMethod") {
                             text += "<span class='elementSpan'><ul>";
-                            text += "<li>[" + type + "]</li>";
+                            text += "<li>[handler]</li>";
                             text += "<li>name: " + name + "</li>";
                             text += "<li>occur: " + datetime + "</li>";
                             text += "</ul></span>";
@@ -796,7 +951,12 @@
                         }
 
                         if(type == "methodCall") {
-
+                            /*text += "<span class='elementSpan'><ul>";
+                            text += "<li>[" + type + "]</li>";
+                            text += "<li>name: " + name + "</li>";
+                            text += "<li>occur: " + datetime + "</li>";
+                            text += "</ul></span>";
+                            text += "<span class='arrowSpan'>-></span>";*/
                         }
                         if(type == "event") {
                             var img_path;
@@ -806,7 +966,11 @@
                                 img_path = "\"image/" + capability + "_" + name + ".png\"";
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
-                            text += "<li><img src=" + img_path + ">" + "</li>";
+                            if(parseInt(name)) {
+                                text += "<li style='color:lightcoral'>" + name + "</li>";
+                            }
+                            else
+                                text += "<li><img src=" + img_path + ">" + "</li>";
                             text += "<li>name: " + name + "</li>";
                             text += "<li>cap: " + capability + "</li>";
                             text += "<li>device: " + deviceName + "</li>";
@@ -848,17 +1012,29 @@
                 url += elements[5].split(' ')[1];
             }
             else {
-                url += elements[3].split(':')[1].substring(1) + "/";
-                url += elements[1].split(':')[1].substring(1) + "/";
-                url += elements[4].split(' ')[1];
+                if(elements[1].includes(":")) {
+                    url += elements[3].split(':')[1].substring(1) + "/";
+                    url += elements[1].split(':')[1].substring(1) + "/";
+                    url += elements[4].split(' ')[1];
+                }
+                else {
+                    url += elements[4].split(':')[1].substring(1) + "/";
+                    url += elements[2].split(':')[1].substring(1) + "/";
+                    url += elements[5].split(' ')[1];
+                }
             }
+            console.log(url);
             getJSON(url, function(err, data) {
                 if(err != null) console.error(err);
                 else {
                     if(elements[1] === "")
                         var text = "<h5>what actions are derived from the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " event at " + elements[5].split(' ')[1] + "</h5>";
-                    else
-                        var text = "<h5>what actions are derived from the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " event at " + elements[4].split(' ')[1] + "</h5>";
+                    else {
+                        if(elements[1].includes(":"))
+                            var text = "<h5>what actions are derived from the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " event at " + elements[4].split(' ')[1] + "</h5>";
+                        else
+                            var text = "<h5>what actions are derived from the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " event at " + elements[5].split(' ')[1] + "</h5>";
+                    }
                     var proveInfo = data.data;
 
                     for(var i = 0; i < proveInfo.length; i++) {
@@ -871,7 +1047,7 @@
 
                         if(type == "handlerMethod") {
                             text += "<span class='elementSpan'><ul>";
-                            text += "<li>[" + type + "]</li>";
+                            text += "<li>[handler]</li>";
                             text += "<li>name: " + name + "</li>";
                             text += "<li>occur: " + datetime + "</li>";
                             text += "</ul></span>";
@@ -879,7 +1055,12 @@
                         }
 
                         if(type == "methodCall") {
-
+                            /*text += "<span class='elementSpan'><ul>";
+                            text += "<li>[" + type + "]</li>";
+                            text += "<li>name: " + name + "</li>";
+                            text += "<li>occur: " + datetime + "</li>";
+                            text += "</ul></span>";
+                            text += "<span class='arrowSpan'>-></span>";*/
                         }
                         if(type == "event") {
                             var img_path;
@@ -889,7 +1070,11 @@
                                 img_path = "\"image/" + capability + "_" + name + ".png\"";
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
-                            text += "<li><img src=" + img_path + ">" + "</li>";
+                            if(parseInt(name)) {
+                                text += "<li style='color:lightcoral'>" + name + "</li>";
+                            }
+                            else
+                                text += "<li><img src=" + img_path + ">" + "</li>";
                             text += "<li>name: " + name + "</li>";
                             text += "<li>cap: " + capability + "</li>";
                             text += "<li>device: " + deviceName + "</li>";
@@ -922,17 +1107,29 @@
                 url += elements[5].split(' ')[1];
             }
             else {
-                url += elements[3].split(':')[1].substring(1) + "/";
-                url += elements[1].split(':')[1].substring(1) + "/";
-                url += elements[4].split(' ')[1];
+                if(elements[1].includes(":")) {
+                    url += elements[3].split(':')[1].substring(1) + "/";
+                    url += elements[1].split(':')[1].substring(1) + "/";
+                    url += elements[4].split(' ')[1];
+                }
+                else {
+                    url += elements[4].split(':')[1].substring(1) + "/";
+                    url += elements[2].split(':')[1].substring(1) + "/";
+                    url += elements[5].split(' ')[1];
+                }
             }
+            console.log(url);
             getJSON(url, function(err, data) {
                 if(err != null) console.error(err);
                 else {
                     if(elements[1] === "")
                         var text = "<h5>what events are caused by the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " action at " + elements[5].split(' ')[1] + "</h5>";
-                    else
-                        var text = "<h5>what events are caused by the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " action at " + elements[4].split(' ')[1] + "</h5>";
+                    else {
+                        if(elements[1].includes(":"))
+                            var text = "<h5>what events are caused by the " + elements[3].split(':')[1].substring(1) + " " + elements[1].split(':')[1].substring(1) + " action at " + elements[4].split(' ')[1] + "</h5>";
+                        else
+                            var text = "<h5>what events are caused by the " + elements[4].split(':')[1].substring(1) + " " + elements[2].split(':')[1].substring(1) + " action at " + elements[5].split(' ')[1] + "</h5>";
+                    }
                     var proveInfo = data.data;
 
                     for(var i = 0; i < proveInfo.length; i++) {
@@ -964,7 +1161,11 @@
 
                             text += "<span class='elementSpan'><a href=\"javascript:void(0);\" onclick=\"prove(this.innerText);\"><ul>";
                             text += "<li>[" + type + "]</li>";
-                            text += "<li><img src=" + img_path + ">" + "</li>";
+                            if(parseInt(name)) {
+                                text += "<li style='color:lightcoral'>" + name + "</li>";
+                            }
+                            else
+                                text += "<li><img src=" + img_path + ">" + "</li>";
                             text += "<li>name: " + name + "</li>";
                             text += "<li>cap: " + capability + "</li>";
                             text += "<li>device: " + deviceName + "</li>";

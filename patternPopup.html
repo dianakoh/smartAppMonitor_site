@@ -20,50 +20,76 @@
     var para2 = decodeURI(para2);
     var data = JSON.parse(para2);
     var para3 = para3.substring(8, para3.length);
-    var number = data[0].id;
+    var number = data[1].id;
 
+    console.log(data);
     showFlowData(data);
 
     function showFlowData(data) {
         var text = "";
-        number = data[0].id;
+        number = data[1].id;
         for(var i = 0; i < data.length; i++) {
-            var type = data[i].methodType;
-            var name = data[i].methodName;
-            var capability = data[i].capability;
-            var deviceName = data[i].deviceName;
-            var dateTime = data[i].createdAt;
-            var d = dateTime.split("T");
-            var d2 = d[1].split(".");
-            dateTime = d[0] + "-" + d2[0];
-            if(deviceName.includes("[") && deviceName.includes("]")) deviceName = deviceName.substring(1, deviceName.length-1);
-            if(type == "event") {
-                var img_path;
-                if(capability == "time")
-                    img_path = "\"image/" + capability + ".png\"";
-                else
-                    img_path = "\"image/" + capability + "_" + name + ".png\"";
-                text += "<span class='elementSpan'><a href='#'><ul>";
+            if (data[i].patternNo != undefined || data[i].patternNo != null) {
+                text += "<div style='color:lightcoral'>" + "pattern" + (parseInt(data[i].patternNo)+1) + "</div>"
+            } else {
+                var type = data[i].methodType;
+                var name = data[i].methodName;
+                var capability = data[i].capability;
+                var deviceName = data[i].deviceName;
+                var dateTime = data[i].createdAt;
+                var d = dateTime.split("T");
+                var d2 = d[1].split(".");
+                var datetime = d[0] + "-" + d2[0];
+                if (deviceName.includes("[") && deviceName.includes("]")) deviceName = deviceName.substring(1, deviceName.length - 1);
+                if (type == "handlerMethod") {
+                    text += "<span class='elementSpan'><ul>";
+                    text += "<li>[handler]</li>";
+                    text += "<li>name: " + name + "</li>";
+                    text += "<li>occur: " + datetime + "</li>";
+                    text += "</ul></span>";
+                    text += "<span class='arrowSpan'>-></span>";
+                }
+
+                if (type == "methodCall") {
+                    /*text += "<span class='elementSpan'><ul>";
                 text += "<li>[" + type + "]</li>";
-                text += "<li><img src=" + img_path + ">" + "</li>";
                 text += "<li>name: " + name + "</li>";
-                text += "<li>cap: " + capability + "</li>";
-                text += "<li>device: " + deviceName + "</li>";
-                text += "<li>occur: " + dateTime + "</li>";
-                text += "</ul></a></span>";
-                text += "<span style='display: inline-block;' class='arrowSpan'>-></span>";
-            }
-            if(type == "action") {
-                var img_path = "\"image/" + capability + "_" + name + ".png\"";
-                text += "<span class='elementSpan'><a href='#'><ul>";
-                text += "<li>[" + type + "]</li>";
-                text += "<li><img src=" + img_path + ">" + "</li>";
-                text += "<li>name: " + name + "</li>";
-                text += "<li>cap: " + capability + "</li>";
-                text += "<li>device: " + deviceName + "</li>";
-                text += "<li>occur: " + dateTime + "</li>";
-                text += "</ul></a></span>";
-                text += "<span style='display: inline-block;' class='arrowSpan'>-></span>";
+                text += "<li>occur: " + datetime + "</li>";
+                text += "</ul></span>";
+                text += "<span class='arrowSpan'>-></span>";*/
+                }
+                if (type == "event") {
+                    var img_path;
+                    if (capability == "time")
+                        img_path = "\"image/" + capability + ".png\"";
+                    else
+                        img_path = "\"image/" + capability + "_" + name + ".png\"";
+                    text += "<span class='elementSpan'><a href='#'><ul>";
+                    text += "<li>[" + type + "]</li>";
+                    if (parseInt(name)) {
+                        console.log("number");
+                        text += "<li style='color:lightcoral'>" + name + "</li>";
+                    } else
+                        text += "<li><img src=" + img_path + ">" + "</li>";
+                    text += "<li>name: " + name + "</li>";
+                    text += "<li>cap: " + capability + "</li>";
+                    text += "<li>device: " + deviceName + "</li>";
+                    text += "<li>occur: " + dateTime + "</li>";
+                    text += "</ul></a></span>";
+                    text += "<span style='display: inline-block;' class='arrowSpan'>-></span>";
+                }
+                if (type == "action") {
+                    var img_path = "\"image/" + capability + "_" + name + ".png\"";
+                    text += "<span class='elementSpan'><a href='#'><ul>";
+                    text += "<li>[" + type + "]</li>";
+                    text += "<li><img src=" + img_path + ">" + "</li>";
+                    text += "<li>name: " + name + "</li>";
+                    text += "<li>cap: " + capability + "</li>";
+                    text += "<li>device: " + deviceName + "</li>";
+                    text += "<li>occur: " + dateTime + "</li>";
+                    text += "</ul></a></span>";
+                    text += "<span style='display: inline-block;' class='arrowSpan'>-></span>";
+                }
             }
         }
         document.getElementById("patternDiv").innerHTML = text;
